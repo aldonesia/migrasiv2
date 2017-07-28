@@ -9,7 +9,24 @@ class HDTA extends CI_Controller {
         $this->load->model('m_wo');
     }
 	public function index() {
-		redirect('Dashboard');
+		$is_logged_in = $this->session->userdata('is_logged_in');
+        if($is_logged_in) {
+            $data['title'] = 'TMM';
+            $data['page_header'] = 'Telkom Migration Monitoring';
+            $data['nama'] = $this->session->userdata('nama');
+            $data['role'] = $this->session->userdata('role');
+            if($this->session->userdata('role') == 'RO3')
+                $this->load->view('HDTA/Group/welcome',$data);
+            else if($this->session->userdata('role') == 'RO4')
+                $this->load->view('HDTA/Central/welcome',$data);
+            else if($this->session->userdata('role') == 'R05')
+                $this->load->view('HDTA/Logic/welcome',$data);
+            else if($this->session->userdata('role') == 'RO6')
+                $this->load->view('HDTA/InputPS/welcome',$data);
+        }
+        else {
+            redirect('Access');
+        }
 	}
 
     public function AddWObyDP_js() {
@@ -22,7 +39,7 @@ class HDTA extends CI_Controller {
             $data['select_mitra'][$object_mitra->id_mitra] = $object_mitra->nama_mitra;
         }
         $this->load->view('layout/header',$data);
-        $this->load->view('HDTA/addwobydpjs',$data);
+        $this->load->view('HDTA/Group/addwobydpjs',$data);
         $this->load->view('layout/footer',$data);
     }
 
@@ -36,7 +53,7 @@ class HDTA extends CI_Controller {
             $data['select_mitra'][$object_mitra->id_mitra] = $object_mitra->nama_mitra;
         }
         $this->load->view('layout/header',$data);
-        $this->load->view('HDTA/addwobyrkjs',$data);
+        $this->load->view('HDTA/Group/addwobyrkjs',$data);
         $this->load->view('layout/footer',$data);
     }
 
@@ -103,7 +120,7 @@ class HDTA extends CI_Controller {
         }
 
         $this->load->view('layout/header');
-        $this->load->view('HDTA/managewo', $data);
+        $this->load->view('HDTA/Group/managewo', $data);
         $this->load->view('layout/footer');
     }
 

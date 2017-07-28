@@ -8,7 +8,7 @@ class M_wo extends CI_Model {
                 // Your own constructor code
         }
 
-<<<<<<< HEAD
+
         function trackingwo($values,$mitra) {
                 if($values == 'RO4') $this->db->where_in('id_fase_transaksi',array('FA01','FA02','FA05','FA08','FA10','FA11','FA15'));
                 elseif($values == 'RO5') {
@@ -49,7 +49,7 @@ class M_wo extends CI_Model {
                         return $last_query;
                 }
         }
-=======
+
     //     function trackingwo($values,$mitra) {
     //             if($values == 'RO4') $this->db->where_in('id_fase_transaksi',array('FA01','FA02','FA05','FA08','FA10','FA11','FA15'));
     //             elseif($values == 'RO5') {
@@ -90,15 +90,15 @@ class M_wo extends CI_Model {
     //                     return $last_query;
     //             }
     //     }
->>>>>>> d45bc01dc30bcb1ba0224e3efe76e1792a145637
+
 
         function checkwo($values) {
-                $this->db->where('id_mitra_transaksi',$values);
+                $this->db->where('MITRA',$values);
                 $res = $this->db->get('transaksi');
                 return $res->result();
         }
 
-<<<<<<< HEAD
+
         function check_nd($values) {
 
                 $this->db->where('ND_transaksi',$values);
@@ -111,7 +111,7 @@ class M_wo extends CI_Model {
                 }
 
         }
-=======
+
     //     function check_nd($values) {
 
     //             $this->db->where('ND_transaksi',$values);
@@ -124,15 +124,8 @@ class M_wo extends CI_Model {
     //             }
 
     //     }
->>>>>>> d45bc01dc30bcb1ba0224e3efe76e1792a145637
-        function assign_teknisi($data) {
-                extract($data);
-                $this->db->where('id_transaksi',$id);
-                $this->db->update('transaksi',array('id_user_transaksi' => $tek));
-                return true;
-        }
 
-<<<<<<< HEAD
+
         function update_wo($data) {
                 extract($data);
                 $this->db->where('id_transaksi',$id);
@@ -352,7 +345,7 @@ class M_wo extends CI_Model {
             return false;
         }
     }
-=======
+
     //     function update_wo($data) {
     //             extract($data);
     //             $this->db->where('id_transaksi',$id_transaksi);
@@ -576,5 +569,5 @@ class M_wo extends CI_Model {
     //         return false;
     //     }
     // }
->>>>>>> d45bc01dc30bcb1ba0224e3efe76e1792a145637
+
 }

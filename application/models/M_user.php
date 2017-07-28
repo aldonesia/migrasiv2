@@ -16,7 +16,7 @@ class M_user extends CI_Model {
                 }
         }
 
-<<<<<<< HEAD
+
         function get_all_mitra() {
                 $sql = $this->db->get('mitra');
                 return $sql->result();
@@ -26,7 +26,7 @@ class M_user extends CI_Model {
                 $sql = $this->db->get('role_user');
                 return $sql->result();
         }
-=======
+
     //     function get_all_mitra() {
     //             $sql = $this->db->get('mitra');
     //             return $sql->result();
@@ -36,8 +36,6 @@ class M_user extends CI_Model {
     //             $sql = $this->db->get('role_user');
     //             return $sql->result();
     //     }
->>>>>>> d45bc01dc30bcb1ba0224e3efe76e1792a145637
-
         function get_all_status() {
                 $res = $this->db->get('status');
                 return $res->result();
@@ -56,7 +54,6 @@ class M_user extends CI_Model {
                 else return FALSE;
         }
 
-<<<<<<< HEAD
         function get_all_user() {
                 $sql = $this->db->get('user');
                 return $sql->result();
@@ -89,7 +86,7 @@ class M_user extends CI_Model {
                         return $res->result();
                 }
         }
-=======
+
     //     function get_all_user() {
     //             $sql = $this->db->get('user');
     //             return $sql->result();
@@ -122,7 +119,7 @@ class M_user extends CI_Model {
     //                     return $res->result();
     //             }
     //     }
->>>>>>> d45bc01dc30bcb1ba0224e3efe76e1792a145637
+
 
         function check_mitra($values) {
                 $this->db->where('id_mitra',$values);
@@ -130,7 +127,7 @@ class M_user extends CI_Model {
                 return $res->result();
         }
 
-<<<<<<< HEAD
+
         function check_if_username_exists($username) {
 
                 $this->db->where('username_user',$username);
@@ -243,7 +240,7 @@ class M_user extends CI_Model {
         $this->db->where('id_user', $id_user);
         $this->db->delete($this->table);
     }
-=======
+
     //     function check_if_username_exists($username) {
 
     //             $this->db->where('username_user',$username);
@@ -356,6 +353,5 @@ class M_user extends CI_Model {
     //     $this->db->where('id_user', $id_user);
     //     $this->db->delete($this->table);
     // }
->>>>>>> d45bc01dc30bcb1ba0224e3efe76e1792a145637
 
 }
