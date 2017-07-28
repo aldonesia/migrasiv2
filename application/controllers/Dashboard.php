@@ -25,8 +25,8 @@ class Dashboard extends CI_Controller {
 
 
 	public function WelcomePageHDM() {
-		if($data['role'] == 'RO7'){
-			redirect('HDM/CheckWoHDM');
+		if($this->session->userdata('role') == 'RO7'){
+			redirect('HDM');
 		}
 		else redirect('Dashboard');
 	}

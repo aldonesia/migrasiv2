@@ -3,7 +3,7 @@
 class HDM extends CI_Controller {	
 	public function __construct() {
         parent::__construct();
-        $this->load->model('m_wo');
+        $this->load->model('m_hdm');
         $this->load->model('m_user');
         $this->load->model('m_log');
     }
@@ -13,7 +13,7 @@ class HDM extends CI_Controller {
 		if($is_logged_in) {
 			$data['page_header'] = 'Checking WO . . .';
 			$mitra = $this->session->userdata('mitra');
-			$query = $this->m_wo->get_all_teknisi($mitra);
+			$query = $this->m_hdm->get_all_teknisi($mitra);
 			$data['select_teknisi'] = array();
 			foreach ($query as $object) {
 				$data['select_teknisi'][$object->id_user]=$object->nama_user;
@@ -30,9 +30,9 @@ class HDM extends CI_Controller {
 	public function ajax_list()
     {
     	$mitra = $this->session->userdata('mitra');
-    	$fase = $this->m_wo->get_all_fase();
-    	$nama_teknisi = $this->m_wo->get_nama_teknisi();
-        $list = $this->m_wo->get_datatables($mitra);
+    	$fase = $this->m_hdm->get_all_fase();
+    	$nama_teknisi = $this->m_hdm->get_nama_teknisi();
+        $list = $this->m_hdm->get_datatables($mitra);
         $data = array();
         $no = $_POST['start'];
         foreach ($list as $wo) {
@@ -78,8 +78,8 @@ class HDM extends CI_Controller {
  
         $output = array(
                         "draw" => $_POST['draw'],
-                        "recordsTotal" => $this->m_wo->count_all(),
-                        "recordsFiltered" => $this->m_wo->count_filtered($mitra),
+                        "recordsTotal" => $this->m_hdm->count_all(),
+                        "recordsFiltered" => $this->m_hdm->count_filtered($mitra),
                         "data" => $data,
                 );
         //output to json format
@@ -88,7 +88,7 @@ class HDM extends CI_Controller {
  
     public function ajax_edit($id_transaksi)
     {
-        $data = $this->m_wo->get_by_id_transaksi($id_transaksi);
+        $data = $this->m_hdm->get_by_id_transaksi($id_transaksi);
         echo json_encode($data);
     }
  
@@ -125,7 +125,7 @@ class HDM extends CI_Controller {
         		'action_log' => 'ASSIGN TEKNISI',
         		'updated_by_log'=> $mitra = $this->session->userdata('nama')
         	);
-        $this->m_wo->update(array('ND'=> $this->input->post('ND')), $data);
+        $this->m_hdm->update(array('ND'=> $this->input->post('ND')), $data);
         $this->m_log->insertlog($log);	
         echo json_encode(array("status" => TRUE));	
         
@@ -163,7 +163,7 @@ class HDM extends CI_Controller {
         		'action_log' => 'TAMBAH SN DAN ODP',
         		'updated_by_log'=> $mitra = $this->session->userdata('nama')
         	);
-        $this->m_wo->update(array('ND'=> $this->input->post('ND')), $data);
+        $this->m_hdm->update(array('ND'=> $this->input->post('ND')), $data);
         $this->m_log->insertlog($log);
         echo json_encode(array("status" => TRUE));
     }
@@ -193,7 +193,7 @@ class HDM extends CI_Controller {
         		'action_log' => 'TAMBAH SN DAN ODP',
         		'updated_by_log'=> $mitra = $this->session->userdata('nama')
         	);
-        $this->m_wo->update(array('ND'=> $this->input->post('ND')), $data);
+        $this->m_hdm->update(array('ND'=> $this->input->post('ND')), $data);
         $this->m_log->insertlog($log);
         echo json_encode(array("status" => TRUE));	
         
