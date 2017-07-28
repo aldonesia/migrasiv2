@@ -1,4 +1,5 @@
 <div class="container">
+        <div class="alert alert-success" style="display: none;"></div>
         <br />
         <button class="btn btn-default" onclick="reload_table()"><i class="glyphicon glyphicon-refresh"></i> Reload</button>
         <br />
@@ -6,13 +7,14 @@
         <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
                 <tr>
+                    <th>No</th>
                     <th>Tanggal Data Masuk</th>
+                    <th>ND</th>
+                    <th>Tanggal Input Teknisi</th>
+                    <th>Teknisi</th>
                     <th>Fase</th>
                     <th>Status</th>
                     <th>Keterangan</th>
-                    <th>Tanggal Input Teknisi</th>
-                    <th>Teknisi</th>
-                    <th>ND</th>
                     <th>ODP</th>
                     <th>SN</th>
                     <th style="width:125px;">Action</th>
@@ -22,13 +24,6 @@
             </tbody>
         </table>
     </div>
- 
- 
-<script src="<?php echo base_url('assets/js/jQuery-2.1.3.min.js')?>"></script>
-<script src="<?php echo base_url('assets/js/bootstrap.min.js')?>"></script>
-<script src="<?php echo base_url('assets/js/jquery.dataTables.min.js')?>"></script>
-<script src="<?php echo base_url('assets/js/dataTables.bootstrap.js')?>"></script>
- 
  
 <script type="text/javascript">
  
@@ -267,6 +262,7 @@ function save()
                 if(data.status) //if success close modal and reload ajax table
                 {
                     $('#modal_form').modal('hide');
+                    $('.alert-success').html('data sukses ditambahkan').fadeIn().delay(4000).fadeOut('slow');
                     reload_table();
                 }
                 else
@@ -306,6 +302,7 @@ function save()
                 if(data.status) //if success close modal and reload ajax table
                 {
                     $('#modal_form2').modal('hide');
+                    $('.alert-success').html('data sukses ditambahkan').fadeIn().delay(4000).fadeOut('slow');
                     reload_table();
                 }
                 else
@@ -345,6 +342,7 @@ function save()
                 if(data.status) //if success close modal and reload ajax table
                 {
                     $('#modal_form3').modal('hide');
+                    $('.alert-success').html('data sukses ditambahkan').fadeIn().delay(4000).fadeOut('slow');
                     reload_table();
                 }
                 else
@@ -384,6 +382,7 @@ function save()
                 if(data.status) //if success close modal and reload ajax table
                 {
                     $('#modal_form5').modal('hide');
+                    $('.alert-success').html('data sukses ditambahkan').fadeIn().delay(4000).fadeOut('slow');
                     reload_table();
                 }
                 else
@@ -423,6 +422,7 @@ function save()
                 if(data.status) //if success close modal and reload ajax table
                 {
                     $('#modal_form6').modal('hide');
+                    $('.alert-success').html('data sukses ditambahkan').fadeIn().delay(4000).fadeOut('slow');
                     reload_table();
                 }
                 else

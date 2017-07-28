@@ -52,25 +52,35 @@ class HDM extends CI_Controller {
         foreach ($list as $wo) {
             $no++;
             $row = array();
+            $row[] = $no;
             $row[] = $wo->TGL_DATA_MASUK;
-            foreach($fase as $object) {
-                if($object->id_fase == $wo->FASE_TRANSAKSI) $row[] = $object->nama_fase; 
-            }
-            foreach($status as $object) {
-                if($object->id_status == $wo->STATUS) $row[] = $object->nama_status; 
-            }
-            $row[] = $wo->KETERANGAN_TAMBAHAN;
+            $row[] = $wo->ND;
             $row[] = $wo->TGL_INPUT_TEKNISI;
             if ($wo->ID_TEKNISI != NULL)
             {
-	            foreach($nama_teknisi as $object) {
-	                if($object->id_user == $wo->ID_TEKNISI) $row[] = $object->nama_user;
-	            }
-	        }
-	        else{
-	        	$row[] = $wo->ID_TEKNISI;
-	        }
-            $row[] = $wo->ND;
+                foreach($nama_teknisi as $object) {
+                    if($object->id_user == $wo->ID_TEKNISI) $row[] = $object->nama_user;
+                }
+            }
+            else{
+                $row[] = $wo->ID_TEKNISI;
+            }
+            foreach($fase as $object) {
+                if($object->id_fase == $wo->FASE_TRANSAKSI) $row[] = $object->nama_fase; 
+            }
+            // foreach($status as $object) {
+            //     if($object->id_status == $wo->STATUS) $row[] = $object->nama_status; 
+            // }
+            if ($wo->STATUS != NULL)
+            {
+                foreach($status as $object) {
+                    if($object->id_status == $wo->STATUS) $row[] = $object->nama_status; 
+                }
+            }
+            else{
+                $row[] = $wo->STATUS;
+            }
+            $row[] = $wo->KETERANGAN_TAMBAHAN;
             $row[] = $wo->ODP;
             $row[] = $wo->SN;
  
@@ -126,7 +136,7 @@ class HDM extends CI_Controller {
         $data = array(
                 'ID_TEKNISI' => $this->input->post('idteknisi'),
                 'TGL_INPUT_TEKNISI' => date('Y-m-d'),
-                'FASE_TRANSAKSI' => 'FA03',
+                'FASE_TRANSAKSI' => 'FA02',
                 'KETERANGAN_TAMBAHAN' => $this->input->post('Keterangan')
             );
         $status = $this->m_log->getstatus();
@@ -294,6 +304,85 @@ class HDM extends CI_Controller {
         $this->m_hdm->update(array('ND'=> $this->input->post('ND')), $data);
         $this->m_log->insertlog($log);
         echo json_encode(array("status" => TRUE));	
-        
+    }
+
+    public function trackwo()
+    {
+            $this->load->view('layout/header');
+            $this->load->view('HDM/trackwohdm');
+            $this->load->view('layout/footer');
+    }
+
+    public function ajax_list_trackwo()
+    {
+        $mitra = $this->session->userdata('mitra');
+        $fase = $this->m_hdm->get_all_fase();
+        $nama_teknisi = $this->m_hdm->get_nama_teknisi();
+        $status = $this->m_hdm->get_all_status();
+        $list = $this->m_hdm->get_datatables($mitra);
+        $data = array();
+        $no = $_POST['start'];
+        foreach ($list as $wo) {
+            $no++;
+            $row = array();
+            $row[] = $no;
+
+            $row[] = $wo->TGL_DATA_MASUK;
+
+            $row[] = $wo->ND;
+
+            foreach($fase as $object) {
+                if($object->id_fase == $wo->FASE_TRANSAKSI) $row[] = $object->nama_fase; 
+            }
+
+            if ($wo->STATUS != NULL)
+            {
+                foreach($status as $object) {
+                    if($object->id_status == $wo->STATUS) $row[] = $object->nama_status; 
+                }
+            }
+            else{
+                $row[] = $wo->STATUS;
+            }
+
+            $row[] = $wo->TGL_LAYANAN_UP;
+
+            if ($wo->UPDATE_LAYANAN != NULL)
+            {
+                foreach($status as $object) {
+                    if($object->id_status == $wo->UPDATE_LAYANAN) $row[] = $object->nama_status; 
+                }
+            }
+            else{
+                $row[] = $wo->UPDATE_LAYANAN;
+            }
+
+            if ($wo->ESKALASI_KENDALA != NULL)
+            {
+                foreach($status as $object) {
+                    if($object->id_status == $wo->ESKALASI_KENDALA) $row[] = $object->nama_status; 
+                }
+            }
+            else{
+                $row[] = $wo->ESKALASI_KENDALA;
+            }
+            $row[] = $wo->STATUS_DP;
+            $row[] = $wo->KETERANGAN_TAMBAHAN;
+            $row[] = $wo->TGL_INPUT;
+            $row[] = $wo->TGL_PS;
+            $row[] = $wo->STATUS_PS;
+     
+         
+            $data[] = $row;
+        }
+ 
+        $output = array(
+                        "draw" => $_POST['draw'],
+                        "recordsTotal" => $this->m_hdm->count_all(),
+                        "recordsFiltered" => $this->m_hdm->count_filtered($mitra),
+                        "data" => $data,
+                );
+        //output to json format
+        echo json_encode($output);
     }
 }

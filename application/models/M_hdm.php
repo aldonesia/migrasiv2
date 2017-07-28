@@ -4,8 +4,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class M_hdm extends CI_Model {
  
     var $table = 'transaksi';
-    var $column_order = array('TGL_DATA_MASUK','FASE_TRANSAKSI','KETERANGAN_TAMBAHAN','TGL_INPUT_TEKNISI','ID_TEKNISI','ND','NAMA_PELANGGAN','STATUS','ODP','SN',null); //set column field database for datatable orderable
-    var $column_search = array('FASE','ND'); //set column field database for datatable searchable just firstname , lastname , address are searchable
+    var $column_order = array('TGL_DATA_MASUK','FASE_TRANSAKSI','KETERANGAN_TAMBAHAN','TGL_INPUT_TEKNISI','ID_TEKNISI','ND','NAMA_PELANGGAN','STATUS','ODP','SN','TGL_LAYANAN_UP','UPDATE_LAYANAN','ESKALASI_KENDALA','STATUS_DP','TGL_input','TGL_PS','STATUS_PS',null); //set column field database for datatable orderable
+    var $column_search = array('ND'); //set column field database for datatable searchable just firstname , lastname , address are searchable
     var $order = array('ID_TRANSAKSI' => 'asc'); // default order 
  
     public function __construct()
@@ -17,7 +17,7 @@ class M_hdm extends CI_Model {
     private function _get_datatables_query($id_mitra)
     {
         $this->db->where('MITRA', $id_mitra);
-        $this->db->where_in('FASE_TRANSAKSI', array('FA02','FA03','FA04','FA05','FA06'));
+        $this->db->where_in('FASE_TRANSAKSI', array('FA01','FA02','FA03','FA04','FA05','FA06'));
         $this->db->from($this->table);
  
         $i = 0;
