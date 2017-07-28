@@ -18,9 +18,9 @@ class HDM extends CI_Controller {
 			foreach ($query as $object) {
 				$data['select_teknisi'][$object->id_user]=$object->nama_user;
 			}
-			$this->load->view('Design/header',$data);
+			$this->load->view('layout/header',$data);
 			$this->load->view('HDM/checkwoHDM',$data);
-			$this->load->view('Design/footer');
+			$this->load->view('layout/footer');
 		}
 		else {
 			redirect('Access');
