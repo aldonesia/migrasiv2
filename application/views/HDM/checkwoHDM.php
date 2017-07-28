@@ -8,12 +8,11 @@
                 <tr>
                     <th>Tanggal Data Masuk</th>
                     <th>Fase</th>
+                    <th>Status</th>
                     <th>Keterangan</th>
                     <th>Tanggal Input Teknisi</th>
                     <th>Teknisi</th>
                     <th>ND</th>
-                    <th>Nama Pelanggan</th>
-                    <th>STO</th>
                     <th>ODP</th>
                     <th>SN</th>
                     <th style="width:125px;">Action</th>
@@ -113,7 +112,7 @@ function add_teknisi(id)
 function add_sn_odp(id)
 {
     save_method = 'addsnodp';
-    $('#form')[0].reset(); // reset form on modals
+    $('#form2')[0].reset(); // reset form on modals
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
  
@@ -137,10 +136,64 @@ function add_sn_odp(id)
     });
 }
 
+function ChangeFase(id)
+{
+    save_method = 'ChangeFase';
+    $('#form5')[0].reset(); // reset form on modals
+    $('.form-group').removeClass('has-error'); // clear error class
+    $('.help-block').empty(); // clear error string
+ 
+    //Ajax Load data from ajax
+    $.ajax({
+        url : "<?php echo site_url('HDM/ajax_edit/')?>/" + id,
+        type: "GET",
+        dataType: "JSON",
+        success: function(data)
+        {
+ 
+            $('[name="ND"]').val(data.ND);
+            $('#modal_form5').modal('show'); // show bootstrap modal when complete loaded
+            $('.modal-title').text('Add SN ODP'); // Set title to Bootstrap modal title
+ 
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+            alert('Error get data from ajax');
+        }
+    });
+}
+
+function ChangeStatus(id)
+{
+    save_method = 'ChangeStatus';
+    $('#form6')[0].reset(); // reset form on modals
+    $('.form-group').removeClass('has-error'); // clear error class
+    $('.help-block').empty(); // clear error string
+ 
+    //Ajax Load data from ajax
+    $.ajax({
+        url : "<?php echo site_url('HDM/ajax_edit/')?>/" + id,
+        type: "GET",
+        dataType: "JSON",
+        success: function(data)
+        {
+ 
+            $('[name="ND"]').val(data.ND);
+            $('#modal_form6').modal('show'); // show bootstrap modal when complete loaded
+            $('.modal-title').text('Add SN ODP'); // Set title to Bootstrap modal title
+ 
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+            alert('Error get data from ajax');
+        }
+    });   
+}
+
 function add_keterangan(id)
 {
     save_method = 'addketerangan';
-    $('#form')[0].reset(); // reset form on modals
+    $('#form3')[0].reset(); // reset form on modals
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
  
@@ -164,6 +217,36 @@ function add_keterangan(id)
     });
 }
  
+function detail(nd)
+{
+    $('#form4')[0].reset(); // reset form on modals
+    $('.form-group').removeClass('has-error'); // clear error class
+    $('.help-block').empty(); // clear error string
+ 
+    //Ajax Load data from ajax
+    $.ajax({
+        url : "<?php echo site_url('HDM/ajax_detail/')?>/" + nd,
+        type: "GET",
+        dataType: "JSON",
+        success: function(data)
+        {
+            //ND','NAMA','CAREA','RK','DP'
+            $('[name="ND"]').val(data.ND);
+            $('[name="NAMA"]').val(data.NAMA);
+            $('[name="CAREA"]').val(data.CAREA);
+            $('[name="RK"]').val(data.RK);
+            $('[name="DP"]').val(data.DP);
+            $('#modal_form4').modal('show'); // show bootstrap modal when complete loaded
+            $('.modal-title').text('Detail'); // Set title to Bootstrap modal title
+ 
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+            alert('Error get data from ajax');
+        }
+    });
+}
+
 function save()
 {
     $('#btnSave').text('saving...'); //change button text
@@ -247,7 +330,7 @@ function save()
             }
         });
     }
-    else
+    else if(save_method == 'addketerangan')
     {
         url = "<?php echo site_url('HDM/ajax_add_keterangan')?>";
         // ajax adding data to database
@@ -286,6 +369,84 @@ function save()
             }
         });
     }
+    else if (save_method == 'ChangeFase')
+    {
+        url = "<?php echo site_url('HDM/ajax_change_fase')?>";
+        // ajax adding data to database
+        $.ajax({
+            url : url,
+            type: "POST",
+            data: $('#form5').serialize(),
+            dataType: "JSON",
+            success: function(data)
+            {
+     
+                if(data.status) //if success close modal and reload ajax table
+                {
+                    $('#modal_form5').modal('hide');
+                    reload_table();
+                }
+                else
+                {
+                    for (var i = 0; i < data.inputerror.length; i++) 
+                    {
+                        $('[name="'+data.inputerror[i]+'"]').parent().parent().addClass('has-error'); //select parent twice to select div form-group class and add has-error class
+                        $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]); //select span help-block class set text error string
+                    }
+                }
+                $('#btnSave').text('save'); //change button text
+                $('#btnSave').attr('disabled',false); //set button enable 
+     
+     
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                alert('Error adding / update data');
+                $('#btnSave').text('save'); //change button text
+                $('#btnSave').attr('disabled',false); //set button enable 
+     
+            }
+        });
+    }
+    else if (save_method == 'ChangeStatus')
+    {
+        url = "<?php echo site_url('HDM/ajax_change_status')?>";
+        // ajax adding data to database
+        $.ajax({
+            url : url,
+            type: "POST",
+            data: $('#form6').serialize(),
+            dataType: "JSON",
+            success: function(data)
+            {
+     
+                if(data.status) //if success close modal and reload ajax table
+                {
+                    $('#modal_form6').modal('hide');
+                    reload_table();
+                }
+                else
+                {
+                    for (var i = 0; i < data.inputerror.length; i++) 
+                    {
+                        $('[name="'+data.inputerror[i]+'"]').parent().parent().addClass('has-error'); //select parent twice to select div form-group class and add has-error class
+                        $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]); //select span help-block class set text error string
+                    }
+                }
+                $('#btnSave').text('save'); //change button text
+                $('#btnSave').attr('disabled',false); //set button enable 
+     
+     
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                alert('Error adding / update data');
+                $('#btnSave').text('save'); //change button text
+                $('#btnSave').attr('disabled',false); //set button enable 
+     
+            }
+        });
+    }
 }
  
 </script>
@@ -296,7 +457,7 @@ function save()
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 class="modal-title">Person Form</h3>
+                <h3 class="modal-title">tambah teknisi</h3>
             </div>
             <div class="modal-body form">
                 <form action="#" id="form" class="form-horizontal">
@@ -321,6 +482,13 @@ function save()
                                         }
                                     ?>
                                 </select>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Keterangan</label>
+                            <div class="col-md-9">
+                                <input name="Keterangan" class="form-control" type="text">
                                 <span class="help-block"></span>
                             </div>
                         </div>
@@ -366,6 +534,13 @@ function save()
                             <label class="control-label col-md-3">ODP</label>
                             <div class="col-md-9">
                                 <input name="ODP" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Keterangan</label>
+                            <div class="col-md-9">
+                                <input name="Keterangan" class="form-control" type="text">
                                 <span class="help-block"></span>
                             </div>
                         </div>
@@ -418,3 +593,168 @@ function save()
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <!-- End Bootstrap modal add Keterangan-->
+
+<!-- Bootstrap modal detail pelanggan --> 
+<div class="modal fade" id="modal_form4" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">DETAIL PELANGGAN</h3>
+            </div>
+            <!-- ND','NAMA','CAREA','RK','DP' -->
+            <div class="modal-body form">
+                <form action="#" id="form4" class="form-horizontal">
+                    <input type="hidden" value="" name="id"/> 
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">ND</label>
+                            <div class="col-md-9">
+                                <textarea name="ND" class="form-control" type="text"></textarea>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Nama Pelanggan</label>
+                            <div class="col-md-9">
+                                <textarea name="NAMA" class="form-control" type="text"></textarea>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">STO</label>
+                            <div class="col-md-9">
+                                <textarea name="CAREA" class="form-control" type="text"></textarea>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">RK</label>
+                            <div class="col-md-9">
+                                <textarea name="RK" class="form-control" type="text"></textarea>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">DP</label>
+                            <div class="col-md-9">
+                                <textarea name="DP" class="form-control" type="text"> </textarea>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">BACK</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- End Bootstrap modal add Keterangan-->
+
+<!-- Bootstrap modal CHANGE FASE -->
+<div class="modal fade" id="modal_form5" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">Rubah Fase</h3>
+            </div>
+            <div class="modal-body form">
+                <form action="#" id="form5" class="form-horizontal">
+                    <input type="hidden" value="" name="id"/> 
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">ND</label>
+                            <div class="col-md-9">
+                                <input name="ND" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">FASE</label>
+                            <div class="col-md-9">
+                                <select name="Fase" class="form-control">
+                                    <option value="">Pilih Fase</option>
+                                    <?php 
+                                        foreach($select_fase as $object => $value) {
+                                            $object = htmlspecialchars($object); 
+                                            echo '<option value="'. $object .'">'. $value .'</option>';
+                                        }
+                                    ?>
+                                </select>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Keterangan</label>
+                            <div class="col-md-9">
+                                <input name="Keterangan" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- End Bootstrap modal CHANGE FASE-->
+
+<!-- Bootstrap modal CHANGE STATUS -->
+<div class="modal fade" id="modal_form6" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">Rubah Status</h3>
+            </div>
+            <div class="modal-body form">
+                <form action="#" id="form6" class="form-horizontal">
+                    <input type="hidden" value="" name="id"/> 
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">ND</label>
+                            <div class="col-md-9">
+                                <input name="ND" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Status</label>
+                            <div class="col-md-9">
+                                <select name="Status" class="form-control">
+                                    <option value="">Pilih Status</option>
+                                    <?php 
+                                        foreach($select_status as $object => $value) {
+                                            $object = htmlspecialchars($object); 
+                                            echo '<option value="'. $object .'">'. $value .'</option>';
+                                        }
+                                    ?>
+                                </select>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Keterangan</label>
+                            <div class="col-md-9">
+                                <input name="Keterangan" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- End Bootstrap modal CHANGE status-->

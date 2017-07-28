@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class M_hdm extends CI_Model {
  
     var $table = 'transaksi';
-    var $column_order = array('TGL_DATA_MASUK','FASE_TRANSAKSI','KETERANGAN_TAMBAHAN','TGL_INPUT_TEKNISI','ID_TEKNISI','ND','NAMA_PELANGGAN','STO','ODP','SN',null); //set column field database for datatable orderable
+    var $column_order = array('TGL_DATA_MASUK','FASE_TRANSAKSI','KETERANGAN_TAMBAHAN','TGL_INPUT_TEKNISI','ID_TEKNISI','ND','NAMA_PELANGGAN','STATUS','ODP','SN',null); //set column field database for datatable orderable
     var $column_search = array('FASE','ND'); //set column field database for datatable searchable just firstname , lastname , address are searchable
     var $order = array('ID_TRANSAKSI' => 'asc'); // default order 
  
@@ -86,6 +86,16 @@ class M_hdm extends CI_Model {
         return $query->row();
     }
  
+    public function get_by_ND($ND)
+    {
+        $this->db->select(array('ND','NAMA','CAREA','RK','DP'));
+        $this->db->from('master');
+        $this->db->where('ND',$ND);
+        $query = $this->db->get();
+ 
+        return $query->row();
+    }
+
     public function save($data)
     {
         $this->db->insert($this->table, $data);
@@ -110,8 +120,29 @@ class M_hdm extends CI_Model {
         return $sql->result();
     }
 
+    public function get_all_fase_HDM() {
+        $this->db->select(array('id_fase','nama_fase'));
+        $this->db->from('fase');
+        $this->db->where_in('id_fase', array('FA02','FA03','FA04','FA05','FA06'));
+        $sql = $this->db->get();
+        return $sql->result();
+    }
+
     public function get_nama_teknisi() {
         $sql = $this->db->get('user');
+        return $sql->result();
+    }
+
+    public function get_all_status() {
+        $sql = $this->db->get('status');
+        return $sql->result();
+    }
+
+    public function get_all_status_hdm() {
+        $this->db->select(array('id_status','nama_status'));
+        $this->db->from('status');
+        $this->db->where_in('id_status', array('ST05','ST06','ST07','ST08','ST09','ST10','ST11'));
+        $sql = $this->db->get();
         return $sql->result();
     }
 

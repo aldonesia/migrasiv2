@@ -43,7 +43,7 @@ class Access extends CI_Controller {
 						'role'			=> $role_user,
 						'mitra'			=> $mitra_user,
 						'user'			=> $user,
-						'nama'			=> $nama
+						'nama'			=> $nama,
 					);
 					$this->session->set_userdata($data);
 					redirect('dashboard');

@@ -13,11 +13,24 @@ class HDM extends CI_Controller {
 		if($is_logged_in) {
 			$data['page_header'] = 'Checking WO . . .';
 			$mitra = $this->session->userdata('mitra');
+
 			$query = $this->m_hdm->get_all_teknisi($mitra);
 			$data['select_teknisi'] = array();
 			foreach ($query as $object) {
 				$data['select_teknisi'][$object->id_user]=$object->nama_user;
 			}
+
+            $query2 = $this->m_hdm->get_all_fase_HDM();
+            $data['select_fase'] = array();
+            foreach ($query2 as $object) {
+                $data['select_fase'][$object->id_fase]=$object->nama_fase;
+            }
+
+            $query3 = $this->m_hdm->get_all_status_HDM();
+            $data['select_status'] = array();
+            foreach ($query3 as $object) {
+                $data['select_status'][$object->id_status]=$object->nama_status;
+            }
 			$this->load->view('layout/header',$data);
 			$this->load->view('HDM/checkwoHDM',$data);
 			$this->load->view('layout/footer');
@@ -32,6 +45,7 @@ class HDM extends CI_Controller {
     	$mitra = $this->session->userdata('mitra');
     	$fase = $this->m_hdm->get_all_fase();
     	$nama_teknisi = $this->m_hdm->get_nama_teknisi();
+        $status = $this->m_hdm->get_all_status();
         $list = $this->m_hdm->get_datatables($mitra);
         $data = array();
         $no = $_POST['start'];
@@ -41,6 +55,9 @@ class HDM extends CI_Controller {
             $row[] = $wo->TGL_DATA_MASUK;
             foreach($fase as $object) {
                 if($object->id_fase == $wo->FASE_TRANSAKSI) $row[] = $object->nama_fase; 
+            }
+            foreach($status as $object) {
+                if($object->id_status == $wo->STATUS) $row[] = $object->nama_status; 
             }
             $row[] = $wo->KETERANGAN_TAMBAHAN;
             $row[] = $wo->TGL_INPUT_TEKNISI;
@@ -54,22 +71,26 @@ class HDM extends CI_Controller {
 	        	$row[] = $wo->ID_TEKNISI;
 	        }
             $row[] = $wo->ND;
-            $row[] = $wo->NAMA_PELANGGAN;
-            $row[] = $wo->STO;
             $row[] = $wo->ODP;
             $row[] = $wo->SN;
  
-            //add html for action
+            //add html for action 
             if($wo->ID_TEKNISI != NULL)
             {
-            	$row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="AddSNODP" onclick="add_sn_odp('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah SN ODP</a>
-                  <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="AddKeterangan" onclick="add_keterangan('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah Keterangan</a>';
+            	$row[] = '<a class="btn btn-sm btn-danger" href="javascript:void(0)" title="AddSNODP" onclick="add_sn_odp('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah SN ODP</a>
+                <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeFase" onclick="ChangeFase('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Rubah Fase</a>
+                  <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeStatus" onclick="ChangeStatus('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Rubah Status</a>
+                  <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="AddKeterangan" onclick="add_keterangan('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah Keterangan</a>
+                  <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Detail" onclick="detail('."'".$wo->ND."'".')"><i class="glyphicon glyphicon-ok"></i> Detail Pelanggan</a>';
             }
             else
             {
-            	$row[] = '<a class="btn btn-sm btn-danger" href="javascript:void(0)" title="AddTeknisi" onclick="add_teknisi('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah Teknisi</a>
-                  <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="AddSNODP" onclick="add_sn_odp('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah SN ODP</a>
-                  <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="AddKeterangan" onclick="add_keterangan('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah Keterangan</a>';
+            	$row[] = '<a class="btn btn-sm btn-danger" href="javascript:void(0)" title="AddTeknisi" onclick="add_teknisi('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-plus"></i> Tambah Teknisi</a>
+                  <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="AddSNODP" onclick="add_sn_odp('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah SN ODP</a>
+                  <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeFase" onclick="ChangeFase('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Rubah Fase</a>
+                  <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeStatus" onclick="ChangeStatus('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Rubah Status</a>
+                  <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="AddKeterangan" onclick="add_keterangan('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah Keterangan</a>
+                  <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Detail" onclick="detail('."'".$wo->ND."'".')"><i class="glyphicon glyphicon-ok"></i> Detail Pelanggan</a>';
             }
             
          
@@ -91,6 +112,12 @@ class HDM extends CI_Controller {
         $data = $this->m_hdm->get_by_id_transaksi($id_transaksi);
         echo json_encode($data);
     }
+
+    public function ajax_detail($ND)
+    {
+        $data = $this->m_hdm->get_by_ND($ND);
+        echo json_encode($data);
+    }
  
     public function ajax_add_teknisi()
     {
@@ -100,7 +127,7 @@ class HDM extends CI_Controller {
                 'ID_TEKNISI' => $this->input->post('idteknisi'),
                 'TGL_INPUT_TEKNISI' => date('Y-m-d'),
                 'FASE_TRANSAKSI' => 'FA03',
-                'KETERANGAN_TAMBAHAN' => 'Belum Disurvey'
+                'KETERANGAN_TAMBAHAN' => $this->input->post('Keterangan')
             );
         $status = $this->m_log->getstatus();
         foreach($status as $object_status) {
@@ -110,10 +137,10 @@ class HDM extends CI_Controller {
         foreach($fase as $object_fase) {
         	if($nd == $object_fase->ND) $id_fase = $object_fase->FASE_TRANSAKSI;
         }
-        $keterangan = $this->m_log->getketerangan();
-        foreach($keterangan as $object_keterangan) {
-        	if($nd == $object_keterangan->ND) $keterangan = $object_keterangan->KETERANGAN_TAMBAHAN;
-        }
+        // $keterangan = $this->m_log->getketerangan();
+        // foreach($keterangan as $object_keterangan) {
+        // 	if($nd == $object_keterangan->ND) $keterangan = $object_keterangan->KETERANGAN_TAMBAHAN;
+        // }
         
         $log = array(
         		'id_log' => NULL,
@@ -121,7 +148,7 @@ class HDM extends CI_Controller {
         		'ND_log' => $nd,
         		'id_fase_log' => $id_fase,
         		'id_status_log' => $id_status,
-        		'keterangan_log' => $keterangan,
+        		'keterangan_log' => $data['KETERANGAN_TAMBAHAN'],
         		'action_log' => 'ASSIGN TEKNISI',
         		'updated_by_log'=> $mitra = $this->session->userdata('nama')
         	);
@@ -138,6 +165,7 @@ class HDM extends CI_Controller {
         $data = array(
                 'SN' => $this->input->post('SN'),
                 'ODP' => $this->input->post('ODP'),
+                'KETERANGAN_TAMBAHAN' => $this->input->post('Keterangan')
             );
         
         $status = $this->m_log->getstatus();
@@ -148,10 +176,10 @@ class HDM extends CI_Controller {
         foreach($fase as $object_fase) {
         	if($nd == $object_fase->ND) $id_fase = $object_fase->FASE_TRANSAKSI;
         }
-        $keterangan = $this->m_log->getketerangan();
-        foreach($keterangan as $object_keterangan) {
-        	if($nd == $object_keterangan->ND) $keterangan = $object_keterangan->KETERANGAN_TAMBAHAN;
-        }
+        // $keterangan = $this->m_log->getketerangan();
+        // foreach($keterangan as $object_keterangan) {
+        // 	if($nd == $object_keterangan->ND) $keterangan = $object_keterangan->KETERANGAN_TAMBAHAN;
+        // }
         
         $log = array(
         		'id_log' => NULL,
@@ -159,7 +187,7 @@ class HDM extends CI_Controller {
         		'ND_log' => $nd,
         		'id_fase_log' => $id_fase,
         		'id_status_log' => $id_status,
-        		'keterangan_log' => $keterangan,
+        		'keterangan_log' => $data['KETERANGAN_TAMBAHAN'],
         		'action_log' => 'TAMBAH SN DAN ODP',
         		'updated_by_log'=> $mitra = $this->session->userdata('nama')
         	);
@@ -168,6 +196,76 @@ class HDM extends CI_Controller {
         echo json_encode(array("status" => TRUE));
     }
  
+    public function ajax_change_fase()
+    {
+        $nd = $this->input->post('ND');
+        $data = array(
+                'FASE_TRANSAKSI' => $this->input->post('Fase'),
+                'KETERANGAN_TAMBAHAN' => $this->input->post('Keterangan')
+            );
+        $status = $this->m_log->getstatus();
+        foreach($status as $object_status) {
+            if($nd == $object_status->ND) $id_status = $object_status->STATUS;
+        }
+        $fase = $this->m_log->getfase();
+        foreach($fase as $object_fase) {
+            if($nd == $object_fase->ND) $id_fase = $object_fase->FASE_TRANSAKSI;
+        }
+        // $keterangan = $this->m_log->getketerangan();
+        // foreach($keterangan as $object_keterangan) {
+        //  if($nd == $object_keterangan->ND) $keterangan = $object_keterangan->KETERANGAN_TAMBAHAN;
+        // }
+        
+        $log = array(
+                'id_log' => NULL,
+                'tanggal_log' => date('Y-m-d'),
+                'ND_log' => $nd,
+                'id_fase_log' => $data['FASE_TRANSAKSI'],
+                'id_status_log' => $id_status,
+                'keterangan_log' => $data['KETERANGAN_TAMBAHAN'],
+                'action_log' => 'CHANGE FASE',
+                'updated_by_log'=> $mitra = $this->session->userdata('nama')
+            );
+        $this->m_hdm->update(array('ND'=> $this->input->post('ND')), $data);
+        $this->m_log->insertlog($log);  
+        echo json_encode(array("status" => TRUE));
+    }
+
+    public function ajax_change_status()
+    {
+        $nd = $this->input->post('ND');
+        $data = array(
+                'STATUS' => $this->input->post('Status'),
+                'KETERANGAN_TAMBAHAN' => $this->input->post('Keterangan')
+            );
+        $status = $this->m_log->getstatus();
+        foreach($status as $object_status) {
+            if($nd == $object_status->ND) $id_status = $object_status->STATUS;
+        }
+        $fase = $this->m_log->getfase();
+        foreach($fase as $object_fase) {
+            if($nd == $object_fase->ND) $id_fase = $object_fase->FASE_TRANSAKSI;
+        }
+        // $keterangan = $this->m_log->getketerangan();
+        // foreach($keterangan as $object_keterangan) {
+        //  if($nd == $object_keterangan->ND) $keterangan = $object_keterangan->KETERANGAN_TAMBAHAN;
+        // }
+        
+        $log = array(
+                'id_log' => NULL,
+                'tanggal_log' => date('Y-m-d'),
+                'ND_log' => $nd,
+                'id_fase_log' => $id_fase,
+                'id_status_log' => $data['STATUS'],
+                'keterangan_log' => $data['KETERANGAN_TAMBAHAN'],
+                'action_log' => 'CHANGE STATUS',
+                'updated_by_log'=> $mitra = $this->session->userdata('nama')
+            );
+        $this->m_hdm->update(array('ND'=> $this->input->post('ND')), $data);
+        $this->m_log->insertlog($log);  
+        echo json_encode(array("status" => TRUE));
+    }
+
  	public function ajax_add_keterangan()
     {
         $nd = $this->input->post('ND');
@@ -191,7 +289,7 @@ class HDM extends CI_Controller {
         		'id_status_log' => $id_status,
         		'keterangan_log' => $data['KETERANGAN_TAMBAHAN'],
         		'action_log' => 'TAMBAH SN DAN ODP',
-        		'updated_by_log'=> $mitra = $this->session->userdata('nama')
+        		'updated_by_log'=> $this->session->userdata('nama')
         	);
         $this->m_hdm->update(array('ND'=> $this->input->post('ND')), $data);
         $this->m_log->insertlog($log);
