@@ -23,3 +23,5 @@ CREATE TABLE IF NOT EXISTS `ci_sessions` (
         `data` blob NOT NULL,
         KEY `ci_sessions_timestamp` (`timestamp`)
 );
+
+ALTER TABLE `transaksi` ADD PRIMARY KEY(`ND`);
