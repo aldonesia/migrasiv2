@@ -32,7 +32,7 @@ class Dashboard extends CI_Controller {
 	}
 
 	public function WelcomePageHDTA() {
-		if($data['role'] == 'RO3' || $data['role'] == 'RO4' || $data['role'] == 'RO5' || $data['role'] == 'RO6'){
+		if($this->session->userdata('role') == 'RO3' || $this->session->userdata('role') == 'RO4' || $this->session->userdata('role') == 'RO5' || $this->session->userdata('role') == 'RO6'){
 			redirect('HDTA');
 		}
 		else redirect('Dashboard');
