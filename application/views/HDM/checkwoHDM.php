@@ -14,6 +14,7 @@
                     <th>Teknisi</th>
                     <th>Fase</th>
                     <th>Status</th>
+                    <th>Kendala</th>
                     <th>Keterangan</th>
                     <th>ODP</th>
                     <th>SN</th>
@@ -158,9 +159,9 @@ function ChangeFase(id)
     });
 }
 
-function ChangeStatus(id)
+function ChangeKendala(id)
 {
-    save_method = 'ChangeStatus';
+    save_method = 'ChangeKendala';
     $('#form6')[0].reset(); // reset form on modals
     $('.form-group').removeClass('has-error'); // clear error class
     $('.help-block').empty(); // clear error string
@@ -407,9 +408,9 @@ function save()
             }
         });
     }
-    else if (save_method == 'ChangeStatus')
+    else if (save_method == 'ChangeKendala')
     {
-        url = "<?php echo site_url('HDM/ajax_change_status')?>";
+        url = "<?php echo site_url('HDM/ajax_change_kendala')?>";
         // ajax adding data to database
         $.ajax({
             url : url,
@@ -706,13 +707,13 @@ function save()
 </div><!-- /.modal -->
 <!-- End Bootstrap modal CHANGE FASE-->
 
-<!-- Bootstrap modal CHANGE STATUS -->
+<!-- Bootstrap modal CHANGE Kendala -->
 <div class="modal fade" id="modal_form6" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 class="modal-title">Rubah Status</h3>
+                <h3 class="modal-title">Masukan Kendala</h3>
             </div>
             <div class="modal-body form">
                 <form action="#" id="form6" class="form-horizontal">
@@ -726,10 +727,10 @@ function save()
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3">Status</label>
+                            <label class="control-label col-md-3">Kendala</label>
                             <div class="col-md-9">
-                                <select name="Status" class="form-control">
-                                    <option value="">Pilih Status</option>
+                                <select name="Kendala" class="form-control">
+                                    <option value="">Pilih Kendala</option>
                                     <?php 
                                         foreach($select_status as $object => $value) {
                                             $object = htmlspecialchars($object); 
@@ -757,4 +758,4 @@ function save()
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<!-- End Bootstrap modal CHANGE status-->
+<!-- End Bootstrap modal tambah kendala-->

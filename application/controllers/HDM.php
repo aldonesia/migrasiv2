@@ -80,6 +80,15 @@ class HDM extends CI_Controller {
             else{
                 $row[] = $wo->STATUS;
             }
+            if ($wo->ESKALASI_KENDALA != NULL)
+            {
+                foreach($status as $object) {
+                    if($object->id_status == $wo->STATUS) $row[] = $object->nama_status; 
+                }
+            }
+            else{
+                $row[] = $wo->ESKALASI_KENDALA;
+            }
             $row[] = $wo->KETERANGAN_TAMBAHAN;
             $row[] = $wo->ODP;
             $row[] = $wo->SN;
@@ -89,7 +98,7 @@ class HDM extends CI_Controller {
             {
             	$row[] = '<a class="btn btn-sm btn-danger" href="javascript:void(0)" title="AddSNODP" onclick="add_sn_odp('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah SN ODP</a>
                 <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeFase" onclick="ChangeFase('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Rubah Fase</a>
-                  <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeStatus" onclick="ChangeStatus('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Rubah Status</a>
+                  <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeKendala" onclick="ChangeKendala('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Tambah Kendala</a>
                   <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="AddKeterangan" onclick="add_keterangan('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah Keterangan</a>
                   <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Detail" onclick="detail('."'".$wo->ND."'".')"><i class="glyphicon glyphicon-ok"></i> Detail Pelanggan</a>';
             }
@@ -98,7 +107,7 @@ class HDM extends CI_Controller {
             	$row[] = '<a class="btn btn-sm btn-danger" href="javascript:void(0)" title="AddTeknisi" onclick="add_teknisi('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-plus"></i> Tambah Teknisi</a>
                   <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="AddSNODP" onclick="add_sn_odp('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah SN ODP</a>
                   <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeFase" onclick="ChangeFase('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Rubah Fase</a>
-                  <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeStatus" onclick="ChangeStatus('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Rubah Status</a>
+                  <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeKendala" onclick="ChangeKendala('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Tambah Kendala</a>
                   <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="AddKeterangan" onclick="add_keterangan('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah Keterangan</a>
                   <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Detail" onclick="detail('."'".$wo->ND."'".')"><i class="glyphicon glyphicon-ok"></i> Detail Pelanggan</a>';
             }
@@ -241,11 +250,11 @@ class HDM extends CI_Controller {
         echo json_encode(array("status" => TRUE));
     }
 
-    public function ajax_change_status()
+    public function ajax_change_kendala()
     {
         $nd = $this->input->post('ND');
         $data = array(
-                'STATUS' => $this->input->post('Status'),
+                'ESKALASI_KENDALA' => $this->input->post('Status'),
                 'KETERANGAN_TAMBAHAN' => $this->input->post('Keterangan')
             );
         $status = $this->m_log->getstatus();
@@ -266,7 +275,7 @@ class HDM extends CI_Controller {
                 'tanggal_log' => date('Y-m-d'),
                 'ND_log' => $nd,
                 'id_fase_log' => $id_fase,
-                'id_status_log' => $data['STATUS'],
+                'id_status_log' => $data['ESKALASI_KENDALA'],
                 'keterangan_log' => $data['KETERANGAN_TAMBAHAN'],
                 'action_log' => 'CHANGE STATUS',
                 'updated_by_log'=> $mitra = $this->session->userdata('nama')

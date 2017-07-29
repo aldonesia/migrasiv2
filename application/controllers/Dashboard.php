@@ -14,7 +14,12 @@ class Dashboard extends CI_Controller {
 			if($data['role'] == 'RO7') {
 				$this->WelcomePageHDM();
 			}
-			else {
+			else if ($data['role'] == 'RO1')
+			{
+				$this->WelcomePageAdmin();
+			}
+			else 
+			{
 			 	$this->WelcomePageHDTA();
 			}
 		}
@@ -27,6 +32,13 @@ class Dashboard extends CI_Controller {
 	public function WelcomePageHDM() {
 		if($this->session->userdata('role') == 'RO7'){
 			redirect('HDM');
+		}
+		else redirect('Dashboard');
+	}
+
+	public function WelcomePageAdmin() {
+		if($this->session->userdata('role') == 'RO1'){
+			redirect('Admin');
 		}
 		else redirect('Dashboard');
 	}

@@ -141,7 +141,7 @@ class M_hdm extends CI_Model {
     public function get_all_status_hdm() {
         $this->db->select(array('id_status','nama_status'));
         $this->db->from('status');
-        $this->db->where_in('id_status', array('ST05','ST06','ST07','ST08','ST09','ST10','ST11'));
+        $this->db->where_in('id_status', array('ST06','ST07','ST08','ST09','ST10','ST11'));
         $sql = $this->db->get();
         return $sql->result();
     }
