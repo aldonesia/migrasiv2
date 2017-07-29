@@ -28,17 +28,17 @@ class Access extends CI_Controller {
 				$query	= $this->m_access->validate($username_temp,$password_md5);
 
 				if($query) {
-					$query1	= $this->m_user->get_user_data($username_temp);
-					foreach ($query1 as $object) {
-						if($object->username_user == $username_temp) {
+					$object	= $this->m_user->get_user_data($username_temp);
+					// foreach ($query1 as $object) {
+						// if($object->username_user == $username_temp) {
 						$role_user 	= $object->id_role_user;
 						$mitra_user	= $object->id_mitra;
 						$user 		= $object->id_user;
 						$nama		= $object->nama_user;
 						}
-					}
+					// }
 					$data = array(
-						'username' 		=> $username_temp,
+						// 'username' 		=> $username_temp,
 						'is_logged_in' 	=> TRUE,
 						'role'			=> $role_user,
 						'mitra'			=> $mitra_user,

@@ -169,7 +169,7 @@ class HDM extends CI_Controller {
         		'id_status_log' => $id_status,
         		'keterangan_log' => $data['KETERANGAN_TAMBAHAN'],
         		'action_log' => 'ASSIGN TEKNISI',
-        		'updated_by_log'=> $mitra = $this->session->userdata('nama')
+        		'updated_by_log'=> $this->session->userdata('user')
         	);
         $this->m_hdm->update(array('ND'=> $this->input->post('ND')), $data);
         $this->m_log->insertlog($log);	
@@ -208,7 +208,7 @@ class HDM extends CI_Controller {
         		'id_status_log' => $id_status,
         		'keterangan_log' => $data['KETERANGAN_TAMBAHAN'],
         		'action_log' => 'TAMBAH SN DAN ODP',
-        		'updated_by_log'=> $mitra = $this->session->userdata('nama')
+        		'updated_by_log'=> $this->session->userdata('user')
         	);
         $this->m_hdm->update(array('ND'=> $this->input->post('ND')), $data);
         $this->m_log->insertlog($log);
@@ -243,7 +243,7 @@ class HDM extends CI_Controller {
                 'id_status_log' => $id_status,
                 'keterangan_log' => $data['KETERANGAN_TAMBAHAN'],
                 'action_log' => 'CHANGE FASE',
-                'updated_by_log'=> $mitra = $this->session->userdata('nama')
+                'updated_by_log'=> $this->session->userdata('user')
             );
         $this->m_hdm->update(array('ND'=> $this->input->post('ND')), $data);
         $this->m_log->insertlog($log);  
@@ -278,7 +278,7 @@ class HDM extends CI_Controller {
                 'id_status_log' => $data['ESKALASI_KENDALA'],
                 'keterangan_log' => $data['KETERANGAN_TAMBAHAN'],
                 'action_log' => 'CHANGE STATUS',
-                'updated_by_log'=> $mitra = $this->session->userdata('nama')
+                'updated_by_log'=> $this->session->userdata('user')
             );
         $this->m_hdm->update(array('ND'=> $this->input->post('ND')), $data);
         $this->m_log->insertlog($log);  
@@ -308,7 +308,7 @@ class HDM extends CI_Controller {
         		'id_status_log' => $id_status,
         		'keterangan_log' => $data['KETERANGAN_TAMBAHAN'],
         		'action_log' => 'TAMBAH SN DAN ODP',
-        		'updated_by_log'=> $this->session->userdata('nama')
+        		'updated_by_log'=> $this->session->userdata('user')
         	);
         $this->m_hdm->update(array('ND'=> $this->input->post('ND')), $data);
         $this->m_log->insertlog($log);
