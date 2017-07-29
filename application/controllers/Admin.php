@@ -381,4 +381,113 @@ class Admin extends CI_Controller
         //output to json format
         echo json_encode($output);	
 	}
+
+	public function ajax_list_fase()
+    {
+        $fase = $this->m_hdm->get_all_fase();
+        $temp = 'count';
+        $data = array();
+        $no = $_POST['start'];
+        foreach ($fase as $wo) {
+            $no++;
+            $row = array();
+            $row[] = $no;
+            $row[] = $wo->nama_fase;            
+            $row[] = $this->m_admin->get_fase_transaksi($wo->id_fase, $temp);
+            $url1 = array('Admin','DetailedReport',$wo->id_fase);
+     		$row[] = '<a class="btn btn-sm btn-primary" href="Admin/DetailFase/'."$wo->id_fase".'" title="Detail"><iclass="glyphicon glyphicon-ok"></i> Details</a>';
+         
+            $data[] = $row;
+        }
+ 
+        $output = array(
+                        "draw" => $_POST['draw'],
+                        "recordsTotal" => '8',
+                        "recordsFiltered" => '8',
+                        "data" => $data,
+                );
+        //output to json format
+        echo json_encode($output);
+    }
+
+    public function DetailFase()
+    {
+    	$temp = $this->uri->segment(3);
+    	$data['temp'] = $temp;
+    	$this->load->view('layout/header');
+		$this->load->view('Admin/detailedfase',$data);
+		$this->load->view('layout/footer');
+    }
+
+    public function ajax_list_id_fase($temp)
+    {
+    	$fase = $this->m_hdm->get_all_fase();
+        $nama_teknisi = $this->m_hdm->get_nama_teknisi();
+        $status = $this->m_hdm->get_all_status();
+        $list = $this->m_admin->get_datatables_id_fase($temp);
+        $data = array();
+        $no = $_POST['start'];
+        foreach ($list as $wo) {
+            $no++;
+            $row = array();
+            $row[] = $no;
+
+            $row[] = $wo->TGL_DATA_MASUK;
+
+            $row[] = $wo->ND;
+
+            foreach($fase as $object) {
+                if($object->id_fase == $wo->FASE_TRANSAKSI) $row[] = $object->nama_fase; 
+            }
+
+            if ($wo->STATUS != NULL)
+            {
+                foreach($status as $object) {
+                    if($object->id_status == $wo->STATUS) $row[] = $object->nama_status; 
+                }
+            }
+            else{
+                $row[] = $wo->STATUS;
+            }
+
+            $row[] = $wo->TGL_LAYANAN_UP;
+
+            if ($wo->UPDATE_LAYANAN != NULL)
+            {
+                foreach($status as $object) {
+                    if($object->id_status == $wo->UPDATE_LAYANAN) $row[] = $object->nama_status; 
+                }
+            }
+            else{
+                $row[] = $wo->UPDATE_LAYANAN;
+            }
+
+            if ($wo->ESKALASI_KENDALA != NULL)
+            {
+                foreach($status as $object) {
+                    if($object->id_status == $wo->ESKALASI_KENDALA) $row[] = $object->nama_status; 
+                }
+            }
+            else{
+                $row[] = $wo->ESKALASI_KENDALA;
+            }
+            $row[] = $wo->STATUS_DP;
+            $row[] = $wo->KETERANGAN_TAMBAHAN;
+            $row[] = $wo->TGL_INPUT;
+            $row[] = $wo->TGL_PS;
+            $row[] = $wo->STATUS_PS;
+     
+         
+            $data[] = $row;
+        }
+ 
+        $output = array(
+                        "draw" => $_POST['draw'],
+                        "recordsTotal" => $this->m_admin->count_all(),
+                        "recordsFiltered" => $this->m_admin->count_filtered_processing($temp),
+                        "data" => $data,
+                );
+        //output to json format
+        echo json_encode($output);	
+    }
 }

@@ -1,6 +1,6 @@
 <?php
-class M_admin extends CI_Model {
-
+class M_admin extends CI_Model 
+{
         var $table = 'transaksi';
 	    var $column_order = array('TGL_DATA_MASUK','FASE_TRANSAKSI','KETERANGAN_TAMBAHAN','TGL_INPUT_TEKNISI','ID_TEKNISI','ND','NAMA_PELANGGAN','STATUS','ODP','SN','TGL_LAYANAN_UP','UPDATE_LAYANAN','ESKALASI_KENDALA','STATUS_DP','TGL_input','TGL_PS','STATUS_PS',null); //set column field database for datatable orderable
 	    var $column_search = array('ND'); //set column field database for datatable searchable just firstname , lastname , address are searchable
@@ -345,4 +345,68 @@ class M_admin extends CI_Model {
                 if($values == 'count') return $query->num_rows();
                 else return $query->result();
         }
+
+        public function get_fase_transaksi($id_fase, $values) 
+        {
+        	$this->db->from('transaksi');
+        	$this->db->where('FASE_TRANSAKSI',$id_fase);
+        	$query = $this->db->get();
+        	if($values == 'count') return $query->num_rows();
+                else return $query->result();
+    	}
+
+    	private function _get_datatables_query_id_fase($id_fase)
+	    {
+	    	$this->db->where('FASE_TRANSAKSI', $id_fase);
+	        $this->db->from($this->table);
+	 
+	        $i = 0;
+	     
+	        foreach ($this->column_search as $item) // loop column 
+	        {
+	            if($_POST['search']['value']) // if datatable send POST for search
+	            {
+	                 
+	                if($i===0) // first loop
+	                {
+	                    $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
+	                    $this->db->like($item, $_POST['search']['value']);
+	                }
+	                else
+	                {
+	                    $this->db->or_like($item, $_POST['search']['value']);
+	                }
+	 
+	                if(count($this->column_search) - 1 == $i) //last loop
+	                    $this->db->group_end(); //close bracket
+	            }
+	            $i++;
+	        }
+	         
+	        if(isset($_POST['order'])) // here order processing
+	        {
+	            $this->db->order_by($this->column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+	        } 
+	        else if(isset($this->order))
+	        {
+	            $order = $this->order;
+	            $this->db->order_by(key($order), $order[key($order)]);
+	        }
+	    }
+	 
+	    function get_datatables_id_fase($id_fase)
+	    {
+	        $this->_get_datatables_query_id_fase($id_fase);
+	        if($_POST['length'] != -1)
+	        $this->db->limit($_POST['length'], $_POST['start']);
+	        $query = $this->db->get();
+	        return $query->result();
+	    }
+	 
+	    function count_filtered_id_fase($id_fase)
+	    {
+	        $this->_get_datatables_query_trouble($id_fase);
+	        $query = $this->db->get();
+	        return $query->num_rows();
+	    }
 }
