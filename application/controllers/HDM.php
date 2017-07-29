@@ -319,7 +319,7 @@ class HDM extends CI_Controller {
         $fase = $this->m_hdm->get_all_fase();
         $nama_teknisi = $this->m_hdm->get_nama_teknisi();
         $status = $this->m_hdm->get_all_status();
-        $list = $this->m_hdm->get_datatables($mitra);
+        $list = $this->m_hdm->get_datatables_tw($mitra);
         $data = array();
         $no = $_POST['start'];
         foreach ($list as $wo) {
@@ -379,7 +379,7 @@ class HDM extends CI_Controller {
         $output = array(
                         "draw" => $_POST['draw'],
                         "recordsTotal" => $this->m_hdm->count_all(),
-                        "recordsFiltered" => $this->m_hdm->count_filtered($mitra),
+                        "recordsFiltered" => $this->m_hdm->count_filtered_tw($mitra),
                         "data" => $data,
                 );
         //output to json format
