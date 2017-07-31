@@ -10,6 +10,7 @@
                     <th>No</th>
                     <th>Tanggal Data Masuk</th>
                     <th>ND</th>
+                    <th>Mitra</th>
                     <th>Fase</th>
                     <th>Status</th>
                     <th>Tanggal Layanan Up</th>

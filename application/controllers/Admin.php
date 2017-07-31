@@ -702,7 +702,9 @@ class Admin extends CI_Controller
 
     public function ajax_list_id_fase($temp)
     {
+        $this->load->model('m_user');
     	$fase = $this->m_hdm->get_all_fase();
+        $mitra = $this->m_user->get_all_mitra();
         $nama_teknisi = $this->m_hdm->get_nama_teknisi();
         $status = $this->m_hdm->get_all_status();
         $list = $this->m_admin->get_datatables_id_fase($temp);
@@ -716,6 +718,16 @@ class Admin extends CI_Controller
             $row[] = $wo->TGL_DATA_MASUK;
 
             $row[] = $wo->ND;
+
+            if ($wo->MITRA != NULL)
+            {
+                foreach($mitra as $object) {
+                    if($object->id_mitra == $wo->MITRA) $row[] = $object->nama_mitra; 
+                }
+            }
+            else{
+                $row[] = $wo->MITRA;
+            }
 
             foreach($fase as $object) {
                 if($object->id_fase == $wo->FASE_TRANSAKSI) $row[] = $object->nama_fase; 
