@@ -100,7 +100,8 @@ class HDM extends CI_Controller {
                 <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeFase" onclick="ChangeFase('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Rubah Fase</a>
                   <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeKendala" onclick="ChangeKendala('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Tambah Kendala</a>
                   <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="AddKeterangan" onclick="add_keterangan('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah Keterangan</a>
-                  <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Detail" onclick="detail('."'".$wo->ND."'".')"><i class="glyphicon glyphicon-ok"></i> Detail Pelanggan</a>';
+                  <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Detail" onclick="detail('."'".$wo->ND."'".')"><i class="glyphicon glyphicon-ok"></i> Detail Pelanggan</a>
+                  <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Delete" onclick="cancel_order('."'".$wo->ND."'".')"><i class="glyphicon glyphicon-remove-sign"></i> Cancel Order </a>';
             }
             else
             {
@@ -109,7 +110,8 @@ class HDM extends CI_Controller {
                   <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeFase" onclick="ChangeFase('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Rubah Fase</a>
                   <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeKendala" onclick="ChangeKendala('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Tambah Kendala</a>
                   <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="AddKeterangan" onclick="add_keterangan('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah Keterangan</a>
-                  <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Detail" onclick="detail('."'".$wo->ND."'".')"><i class="glyphicon glyphicon-ok"></i> Detail Pelanggan</a>';
+                  <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Detail" onclick="detail('."'".$wo->ND."'".')"><i class="glyphicon glyphicon-ok"></i> Detail Pelanggan</a>
+                  <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Delete" onclick="cancel_order('."'".$wo->ND."'".')"><i class="glyphicon glyphicon-remove-sign"></i> Cancel Order </a>';
             }
             
          
@@ -313,6 +315,31 @@ class HDM extends CI_Controller {
         $this->m_hdm->update(array('ND'=> $this->input->post('ND')), $data);
         $this->m_log->insertlog($log);
         echo json_encode(array("status" => TRUE));	
+    }
+
+    public function ajax_cancel_order($nd)
+    {
+        $status = $this->m_log->getstatus();
+        foreach($status as $object_status) {
+            if($nd == $object_status->ND) $id_status = $object_status->STATUS;
+        }
+        $fase = $this->m_log->getfase();
+        foreach($fase as $object_fase) {
+            if($nd == $object_fase->ND) $id_fase = $object_fase->FASE_TRANSAKSI;
+        }
+        $log = array(
+                'id_log' => NULL,
+                'tanggal_log' => date('Y-m-d'),
+                'ND_log' => $nd,
+                'id_fase_log' => $id_fase,
+                'id_status_log' => $id_status,
+                'keterangan_log' => 'cancel order by mitra',
+                'action_log' => 'CANCEL ORDER',
+                'updated_by_log'=> $this->session->userdata('user')
+            );
+        $this->m_hdm->delete_by_nd($nd);
+        $this->m_log->insertlog($log);  
+        echo json_encode(array("status" => TRUE));
     }
 
     public function trackwo()

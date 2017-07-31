@@ -8,6 +8,7 @@ class Admin extends CI_Controller
         $this->load->model('m_admin');
         $this->load->model('m_hdm');
         $this->load->model('m_log');
+        $this->load->model('m_user');
     }
 
 	public function index() 
@@ -489,5 +490,176 @@ class Admin extends CI_Controller
                 );
         //output to json format
         echo json_encode($output);	
+    }
+
+    //manageuser
+        public function ManageUser() {
+        $data['query_mitra'] = $this->m_user->get_all_mitra();
+        $data['select_mitra'] = Array();
+        if($data['query_mitra']) {
+            foreach($data['query_mitra'] as $m) {
+            $data['select_mitra'][$m->id_mitra] = $m->nama_mitra;
+            }
+        }
+        
+        $data['query_role'] = $this->m_user->get_all_role();
+        $data['select_role'] = Array();
+        if($data['query_role']) {
+            foreach($data['query_role'] as $r) {
+            $data['select_role'][$r->id_role_user] = $r->nama_role_user;
+            }
+        }
+
+        $this->load->helper('url');
+        $this->load->view('layout/header');
+        $this->load->view('Admin/manageuser',$data);
+        $this->load->view('layout/footer');
+    }
+
+    public function ajax_list_user()
+    {
+        $query_mitra = $this->m_user->get_all_mitra();
+        $query_role = $this->m_user->get_all_role();
+        $list = $this->m_admin->get_datatables_user();
+        $data = array();
+        $no = $_POST['start'];
+        foreach ($list as $user) {
+            $no++;
+            $row = array();
+            $row[] = $user->id_user;
+            foreach($query_mitra as $object) {
+                if($object->id_mitra == $user->id_mitra) $row[] = $object->nama_mitra; 
+            }
+            foreach($query_role as $object) {
+                if($object->id_role_user == $user->id_role_user) $row[] = $object->nama_role_user; 
+            }
+            $row[] = $user->username_user;
+            $row[] = $user->nama_user;
+            $row[] = $user->no_telepon_user;
+ 
+            //add html for action
+            $row[] = '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Edit" onclick="edit_user('."'".$user->id_user."'".')"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
+                  <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Hapus" onclick="delete_user('."'".$user->id_user."'".')"><i class="glyphicon glyphicon-trash"></i> Delete</a>';
+         
+            $data[] = $row;
+        }
+ 
+        $output = array(
+                        "draw" => $_POST['draw'],
+                        "recordsTotal" => $this->m_admin->count_all_user(),
+                        "recordsFiltered" => $this->m_admin->count_filtered_user(),
+                        "data" => $data,
+                );
+        //output to json format
+        echo json_encode($output);
+    }
+ 
+    public function ajax_edit_user($id_user)
+    {
+        $data = $this->m_admin->get_by_id_user($id_user);
+        //$data->dob = ($data->dob == '0000-00-00') ? '' : $data->dob; // if 0000-00-00 set tu empty for datepicker compatibility
+        echo json_encode($data);
+    }
+ 
+    public function ajax_add_user()
+    {
+        $this->_validate_user();
+        $data = array(
+                'id_user' => $this->input->post('id_user'),
+                'id_mitra' => $this->input->post('id_mitra'),
+                'id_role_user' => $this->input->post('id_role_user'),
+                'username_user' => $this->input->post('username_user'),
+                'password_user' => md5($this->input->post('password_user')),
+                'nama_user' => $this->input->post('nama_user'),
+                'no_telepon_user' => $this->input->post('no_telepon_user'),
+            );
+        $insert = $this->m_admin->save_user($data);
+        echo json_encode(array("status" => TRUE));
+    }
+ 
+    public function ajax_update_user()
+    {
+        $this->_validate_user();
+        $data = array(
+                'id_user' => $this->input->post('id_user'),
+                'id_mitra' => $this->input->post('id_mitra'),
+                'id_role_user' => $this->input->post('id_role_user'),
+                'username_user' => $this->input->post('username_user'),
+                'password_user' => md5($this->input->post('password_user')),
+                'nama_user' => $this->input->post('nama_user'),
+                'no_telepon_user' => $this->input->post('no_telepon_user'),
+            );
+        $this->m_admin->update_user(array('id_user' => $this->input->post('id_user')), $data);
+        echo json_encode(array("status" => TRUE));
+    }
+ 
+    public function ajax_delete_user($id_user)
+    {
+        $this->m_admin->delete_by_id_user($id_user);
+        echo json_encode(array("status" => TRUE));
+    }
+ 
+ 
+    private function _validate_user()
+    {
+        $data = array();
+        $data['error_string'] = array();
+        $data['inputerror'] = array();
+        $data['status'] = TRUE;
+ 
+        if($this->input->post('id_user') == '')
+        {
+            $data['inputerror'][] = 'id_user';
+            $data['error_string'][] = 'Id User is required';
+            $data['status'] = FALSE;
+        }
+ 
+        if($this->input->post('id_mitra') == '')
+        {
+            $data['inputerror'][] = 'id_mitra';
+            $data['error_string'][] = 'Id Mitra is required';
+            $data['status'] = FALSE;
+        }
+ 
+        if($this->input->post('id_role_user') == '')
+        {
+            $data['inputerror'][] = 'id_role_user';
+            $data['error_string'][] = 'Role is required';
+            $data['status'] = FALSE;
+        }
+ 
+        if($this->input->post('username_user') == '')
+        {
+            $data['inputerror'][] = 'username_user';
+            $data['error_string'][] = 'Username is required';
+            $data['status'] = FALSE;
+        }
+ 
+        if($this->input->post('password_user') == '')
+        {
+            $data['inputerror'][] = 'password_user';
+            $data['error_string'][] = 'Password is required';
+            $data['status'] = FALSE;
+        }
+ 
+        if($this->input->post('nama_user') == '')
+        {
+            $data['inputerror'][] = 'nama_user';
+            $data['error_string'][] = 'Nama is required';
+            $data['status'] = FALSE;
+        }
+
+        if($this->input->post('no_telepon_user') == '')
+        {
+            $data['inputerror'][] = 'no_telepon_user';
+            $data['error_string'][] = 'No telepon is required';
+            $data['status'] = FALSE;
+        }
+
+        if($data['status'] === FALSE)
+        {
+            echo json_encode($data);
+            exit();
+        }
     }
 }
