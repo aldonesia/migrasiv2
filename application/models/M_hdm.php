@@ -170,7 +170,7 @@ class M_hdm extends CI_Model {
     private function _get_datatables_query_tw($id_mitra)
     {
         $this->db->where('MITRA', $id_mitra);
-        $this->db->where_in('FASE_TRANSAKSI', array('FA07','FA08'));
+        $this->db->where_in('FASE_TRANSAKSI', array('FA06','FA07','FA08'));
         $this->db->from($this->table);
  
         $i = 0;
