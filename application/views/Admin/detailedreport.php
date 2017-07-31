@@ -8,13 +8,18 @@
         <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
                 <tr>
+               
                     <th>No</th>
                     <th>ND</th>
+                    <th>ND REFERENCE</th>
+                    <th>IPTV</th>
+                    <th>TIPE SERVICES</th>
                     <th>Nama</th>
                     <th>STO</th>
                     <th>RK</th>
                     <th>DP</th>
-                    <th>Data UIM</th>
+                    <th>ALPRO</th>
+                    <th>UIMx</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,17 +39,35 @@ else { ?>
                 <tr>
                     <th>No</th>
                     <th>Tanggal Data Masuk</th>
-                    <th>ND</th>
                     <th>Fase</th>
+                    <th>Mitra</th>
+                    <th>Teknisi</th>
+                    <th>Tanggal Input Teknisi</th>
+                    <th>Nama Pelanggan</th>
+                    <th>ND</th>
+                    <th>User Internet</th>
+                    <th>ODP</th>
+                    <th>STO</th>
+                    <th>Password Voice</th>
+                    <th>SN</th>
+                    <th>Hd Grup</th>
+                    <th>Kedetect Lapangan</th>
+                    <th>Maincore</th>
                     <th>Status</th>
-                    <th>Tanggal Layanan Up</th>
+                    <th>ONU ID</th>
                     <th>Update Layanan</th>
+                    <th>Tanggal Layanan Up</th>
+                    <th>Hd Logic</th>
                     <th>Kendala</th>
                     <th>Status DP</th>
                     <th>Keterangan</th>
+                    <th>Layanan</th>
+                    <th>SC</th>
+                    <th>Hd Inputer</th>
                     <th>Tanggal Input</th>
+                    <th>HD PS</th>
+                    <th>Status PS</th>
                     <th>Tanggal Ps</th>
-                    <th>STATUS PS</th>
                 </tr>
             </thead>
             <tbody>

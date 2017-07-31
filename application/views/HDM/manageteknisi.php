@@ -1,20 +1,19 @@
     <div class="container">
-        <h3>Data User</h3>
+        <h3>Data Teknisi <?php echo $nama_mitra ?></h3>
        <ol class="breadcrumb">
             <li><a href="<?php echo base_url()?>"><i class="fa fa-dashboard"></i> Kembali</a></li>
             
-            <li class="active">Kelola User</li>
+            <li class="active">Kelola Teknisi <?php echo $nama_mitra?></li>
           </ol>
-        <button class="btn btn-success" onclick="add_user()"><i class="glyphicon glyphicon-plus"></i> Add user</button>
+        <button class="btn btn-success" onclick="add_user()"><i class="glyphicon glyphicon-plus"></i> Add Teknisi</button>
         <button class="btn btn-default" onclick="reload_table()"><i class="glyphicon glyphicon-refresh"></i> Reload</button>
         <br />
         <br />
         <table id="table" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th>Id User</th>
+                    <th>Id Teknisi</th>
                     <th>Mitra</th>
-                    <th>Role</th>
                     <th>Username</th>
                     <th>Nama</th>
                     <th>No. Telepon</th>
@@ -203,60 +202,30 @@ function delete_user(id_user)
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 class="modal-title">User Form</h3>
+                <h3 class="modal-title">Tambah Teknisi</h3>
             </div>
             <div class="modal-body form">
                 <form action="#" id="form" class="form-horizontal">
                     <input type="hidden" value="" name="id"/> 
                     <div class="form-body">
                         <div class="form-group">
-                            <label class="control-label col-md-3">Id User</label>
+                            <label class="control-label col-md-3">Id Teknisi</label>
                             <div class="col-md-9">
                                 <input name="id_user" placeholder="Id User" class="form-control" type="text">
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3">Mitra</label>
-                            <div class="col-md-9">
-                                <select name="id_mitra" class="form-control" placeholder="mitra">
-                                    <option value=""></option>
-                                    <?php 
-                                        foreach($select_mitra as $object => $value) {
-                                            $object = htmlspecialchars($object); 
-                                            echo '<option value="'. $object .'">'. $value .'</option>';
-                                        }
-                                    ?>
-                                </select>
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3">Role</label>
-                            <div class="col-md-9">
-                                <select name="id_role_user" class="form-control" placeholder="role">
-                                    <option value=""></option>
-                                    <?php 
-                                        foreach($select_role as $object => $value) {
-                                        $object = htmlspecialchars($object); 
-                                        echo '<option value="'. $object .'">'. $value .'</option>';
-                                        }
-                                    ?>
-                                </select>
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="control-label col-md-3">Username</label>
                             <div class="col-md-9">
-                                <input name="username_user" type="tezt" placeholder="password anda" class="form-control"></input>
+                                <input name="username_user" type="tezt" placeholder="username" class="form-control"></input>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3">Password</label>
                             <div class="col-md-9">
-                                <input name="password_user" type="Password" placeholder="password anda" class="form-control"></input>
+                                <input name="password_user" type="Password" placeholder="password baru" class="form-control"></input>
                                 <span class="help-block"></span>
                             </div>
                         </div>

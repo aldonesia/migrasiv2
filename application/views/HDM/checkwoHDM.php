@@ -149,7 +149,7 @@ function ChangeFase(id)
  
             $('[name="ND"]').val(data.ND);
             $('#modal_form5').modal('show'); // show bootstrap modal when complete loaded
-            $('.modal-title').text('Add SN ODP'); // Set title to Bootstrap modal title
+            $('.modal-title').text('Rubah Fase'); // Set title to Bootstrap modal title
  
         },
         error: function (jqXHR, textStatus, errorThrown)
@@ -176,7 +176,7 @@ function ChangeKendala(id)
  
             $('[name="ND"]').val(data.ND);
             $('#modal_form6').modal('show'); // show bootstrap modal when complete loaded
-            $('.modal-title').text('Add SN ODP'); // Set title to Bootstrap modal title
+            $('.modal-title').text('Tambah Kendala'); // Set title to Bootstrap modal title
  
         },
         error: function (jqXHR, textStatus, errorThrown)
@@ -243,6 +243,31 @@ function detail(nd)
     });
 }
 
+function cancel_order(nd)
+{
+    if(confirm('Are you sure delete this data?'))
+    {
+        // ajax delete data to database
+        $.ajax({
+            url : "<?php echo site_url('HDM/ajax_cancel_order')?>/"+nd,
+            type: "POST",
+            dataType: "JSON",
+            success: function(data)
+            {
+                //if success reload ajax table
+                $('#modal_form').modal('hide');
+                $('.alert-success').html('Cancel Order Sukses').fadeIn().delay(4000).fadeOut('slow');
+                reload_table();
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                alert('Error deleting data');
+            }
+        });
+ 
+    }
+}
+
 function save()
 {
     $('#btnSave').text('saving...'); //change button text
@@ -263,7 +288,7 @@ function save()
                 if(data.status) //if success close modal and reload ajax table
                 {
                     $('#modal_form').modal('hide');
-                    $('.alert-success').html('data sukses ditambahkan').fadeIn().delay(4000).fadeOut('slow');
+                    $('.alert-success').html('teknisi sukses ditambahkan').fadeIn().delay(4000).fadeOut('slow');
                     reload_table();
                 }
                 else
@@ -303,7 +328,7 @@ function save()
                 if(data.status) //if success close modal and reload ajax table
                 {
                     $('#modal_form2').modal('hide');
-                    $('.alert-success').html('data sukses ditambahkan').fadeIn().delay(4000).fadeOut('slow');
+                    $('.alert-success').html('data sno dan odp berhasil ditambahkan').fadeIn().delay(4000).fadeOut('slow');
                     reload_table();
                 }
                 else
@@ -343,7 +368,7 @@ function save()
                 if(data.status) //if success close modal and reload ajax table
                 {
                     $('#modal_form3').modal('hide');
-                    $('.alert-success').html('data sukses ditambahkan').fadeIn().delay(4000).fadeOut('slow');
+                    $('.alert-success').html('keterangan sukses ditambahkan').fadeIn().delay(4000).fadeOut('slow');
                     reload_table();
                 }
                 else
@@ -383,7 +408,7 @@ function save()
                 if(data.status) //if success close modal and reload ajax table
                 {
                     $('#modal_form5').modal('hide');
-                    $('.alert-success').html('data sukses ditambahkan').fadeIn().delay(4000).fadeOut('slow');
+                    $('.alert-success').html('fase sukses dirubah').fadeIn().delay(4000).fadeOut('slow');
                     reload_table();
                 }
                 else
@@ -423,7 +448,7 @@ function save()
                 if(data.status) //if success close modal and reload ajax table
                 {
                     $('#modal_form6').modal('hide');
-                    $('.alert-success').html('data sukses ditambahkan').fadeIn().delay(4000).fadeOut('slow');
+                    $('.alert-success').html('kendala sukses dirubah').fadeIn().delay(4000).fadeOut('slow');
                     reload_table();
                 }
                 else
@@ -511,7 +536,7 @@ function save()
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 class="modal-title">ADD SN ODP</h3>
+                <h3 class="modal-title"></h3>
             </div>
             <div class="modal-body form">
                 <form action="#" id="form2" class="form-horizontal">

@@ -2,7 +2,7 @@
 class M_admin extends CI_Model 
 {
         var $table = 'transaksi';
-	    var $column_order = array('TGL_DATA_MASUK','FASE_TRANSAKSI','KETERANGAN_TAMBAHAN','TGL_INPUT_TEKNISI','ID_TEKNISI','ND','NAMA_PELANGGAN','STATUS','ODP','SN','TGL_LAYANAN_UP','UPDATE_LAYANAN','ESKALASI_KENDALA','STATUS_DP','TGL_input','TGL_PS','STATUS_PS',null); //set column field database for datatable orderable
+	    var $column_order = array('TGL_DATA_MASUK','FASE_TRANSAKSI','MITRA','ID_TEKNISI','TGL_INPUT_TEKNISI','NAMA_PELANGGAN','ND','USER_INTERNET','ODP','STO','PASSWORD_VOICE','SN','HD_GRUP','KEDETECT_LAPANGAN','MAINCORE','STATUS','ONU_ID','UPDATE_LAYANAN','TGL_LAYANAN UP','HD_LOGIC','ESKALASI_KENDALA','STATUS_DP','KETERANGAN_TAMBAHAN','LAYANAN','SC','HD_INPUTER','TGL_INPUT','HD_PS','STATUS_PS','TGL_PS',null); //set column field database for datatable orderable
 	    var $column_search = array('ND'); //set column field database for datatable searchable just firstname , lastname , address are searchable
 	    var $order = array('ID_TRANSAKSI' => 'asc'); // default order 
 	 
@@ -244,13 +244,22 @@ class M_admin extends CI_Model
 	    //leftover
 	    //------------
 	    var $table2 = 'temporary';
-		var $column_order2 = array('ND','NAMA','CAREA','RK','DP','ND','UIM_SERVICE_STATUS',null); //set column field database for datatable orderable
+		var $column_order2 = array('ND','ND_REFERENCE','IPTV','TIPE_SERVICES','NAMA','CAREA','RK','DP','ALPRO','UIM_SERVICE_STATUS',null); //set column field database for datatable orderable
 		var $column_search2 = array('ND'); //set column field database for datatable searchable just firstname , lastname , address are searchable
 		var $order2 = array('ND' => 'asc'); // default order 
 	    //------------
 	    private function _get_datatables_query_leftover()
 	    {
-	    	
+	    	$query1 = $this->db->query("select ND from transaksi");
+	    	$query1_result = $query1->result();
+	    	$nd_transaksi= array();
+  			foreach($query1_result as $row)
+  			{
+     			$nd_transaksi[] = $row->ND;
+   			}
+
+
+	    	$this->db->where_not_in('ND', $nd_transaksi);
 	        $this->db->from($this->table2);
 	 
 	        $i = 0;
@@ -312,9 +321,19 @@ class M_admin extends CI_Model
 
 	    //-------------------------------------------------------//
         function get_wo_sisa($values) {
-                $query = $this->db->get('temporary');
-                if($values == 'count') return $query->num_rows();
-                else return $query->result();
+        	$query1 = $this->db->query("select ND from transaksi");
+	    	$query1_result = $query1->result();
+	    	$nd_transaksi= array();
+  			foreach($query1_result as $row)
+  			{
+     			$nd_transaksi[] = $row->ND;
+   			}
+
+	    	$this->db->where_not_in('ND', $nd_transaksi);
+	        $this->db->from('temporary');
+            $query = $this->db->get();
+            if($values == 'count') return $query->num_rows();
+            else return $query->result();
         }
 
         function get_wo_processing($values) {
@@ -408,5 +427,101 @@ class M_admin extends CI_Model
 	        $this->_get_datatables_query_trouble($id_fase);
 	        $query = $this->db->get();
 	        return $query->num_rows();
+	    }
+
+
+	    //manage user
+
+	    var $table_user = 'user';
+        var $column_order_user = array('id_user','id_mitra','id_role_user','username_user','password_user','nama_user', 'no_telepon_user',null); //set column field database for datatable orderable
+        var $column_search_user = array('id_user','username_user','nama_user','no_telepon_user'); //set column field database for datatable searchable just firstname , lastname , address are searchable
+        var $order_user = array('id_user' => 'desc'); // default order 
+
+        private function _get_datatables_query_user()
+	    {
+	         
+	        $this->db->from($this->table_user);
+	        
+	        $i = 0;
+	     
+	        foreach ($this->column_search_user as $item) // loop column 
+	        {
+	            if($_POST['search']['value']) // if datatable send POST for search
+	            {
+	                 
+	                if($i===0) // first loop
+	                {
+	                    $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
+	                    $this->db->like($item, $_POST['search']['value']);
+	                }
+	                else
+	                {
+	                    $this->db->or_like($item, $_POST['search']['value']);
+	                }
+	 
+	                if(count($this->column_search_user) - 1 == $i) //last loop
+	                    $this->db->group_end(); //close bracket
+	            }
+	            $i++;
+	        }
+	         
+	        if(isset($_POST['order'])) // here order processing
+	        {
+	            $this->db->order_by($this->column_order_user[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+	        } 
+	        else if(isset($this->order_user))
+	        {
+	            $order_user = $this->order_user;
+	            $this->db->order_by(key($order_user), $order_user[key($order_user)]);
+	        }
+	    }
+	 
+	    function get_datatables_user()
+	    {
+	        $this->_get_datatables_query_user();
+	        if($_POST['length'] != -1)
+	        $this->db->limit($_POST['length'], $_POST['start']);
+	        $query = $this->db->get();
+	        return $query->result();
+	    }
+	 
+	    function count_filtered_user()
+	    {
+	        $this->_get_datatables_query_user();
+	        $query = $this->db->get();
+	        return $query->num_rows();
+	    }
+	 
+	    public function count_all_user()
+	    {
+	        $this->db->from($this->table_user);
+	        return $this->db->count_all_results();
+	    }
+	 
+	    public function get_by_id_user($id_user)
+	    {
+	        $this->db->from($this->table_user);
+	        $this->db->where('id_user',$id_user);
+	        $query = $this->db->get();
+	 
+	        return $query->row();
+	    }
+	 
+	    public function save_user($data)
+	    {
+	        $this->db->insert($this->table_user, $data);
+	        return $this->db->insert_id();
+	    }
+	 
+	    public function update_user($where, $data)
+	    {
+	        $this->db->update($this->table_user, $data, $where);
+	        return $this->db->affected_rows();
+	    }
+	 
+	    public function delete_by_id_user($id_user)
+	    {
+	        $this->db->where('id_user', $id_user);
+	        $this->db->delete($this->table_user);
 	    }
 }

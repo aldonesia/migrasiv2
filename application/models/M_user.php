@@ -27,15 +27,7 @@ class M_user extends CI_Model {
                 return $sql->result();
         }
 
-    //     function get_all_mitra() {
-    //             $sql = $this->db->get('mitra');
-    //             return $sql->result();
-    //     }
 
-    //     function get_all_role() {
-    //             $sql = $this->db->get('role_user');
-    //             return $sql->result();
-    //     }
         function get_all_status() {
                 $res = $this->db->get('status');
                 return $res->result();

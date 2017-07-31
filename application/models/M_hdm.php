@@ -75,6 +75,12 @@ class M_hdm extends CI_Model {
         $this->db->from($this->table);
         return $this->db->count_all_results();
     }
+
+    public function delete_by_nd($nd)
+    {
+        $this->db->where('ND', $nd);
+        $this->db->delete($this->table);
+    }
  
     public function get_by_id_transaksi($id_transaksi)
     {
@@ -89,7 +95,7 @@ class M_hdm extends CI_Model {
     public function get_by_ND($ND)
     {
         $this->db->select(array('ND','NAMA','CAREA','RK','DP'));
-        $this->db->from('master');
+        $this->db->from('temporary');
         $this->db->where('ND',$ND);
         $query = $this->db->get();
  
@@ -133,6 +139,11 @@ class M_hdm extends CI_Model {
         return $sql->result();
     }
 
+    public function get_nama_mitra() {
+        $sql = $this->db->get('mitra');
+        return $sql->result();
+    }
+
     public function get_all_status() {
         $sql = $this->db->get('status');
         return $sql->result();
@@ -141,7 +152,7 @@ class M_hdm extends CI_Model {
     public function get_all_status_hdm() {
         $this->db->select(array('id_status','nama_status'));
         $this->db->from('status');
-        $this->db->where_in('id_status', array('ST06','ST07','ST08','ST09','ST10','ST11'));
+        $this->db->where_in('id_status', array('ST06','ST08','ST09','ST10','ST13','ST02'));
         $sql = $this->db->get();
         return $sql->result();
     }
@@ -159,7 +170,7 @@ class M_hdm extends CI_Model {
     private function _get_datatables_query_tw($id_mitra)
     {
         $this->db->where('MITRA', $id_mitra);
-        $this->db->where_in('FASE_TRANSAKSI', array('FA07','FA08'));
+        $this->db->where_in('FASE_TRANSAKSI', array('FA06','FA07','FA08'));
         $this->db->from($this->table);
  
         $i = 0;

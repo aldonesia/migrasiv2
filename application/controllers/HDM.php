@@ -83,7 +83,7 @@ class HDM extends CI_Controller {
             if ($wo->ESKALASI_KENDALA != NULL)
             {
                 foreach($status as $object) {
-                    if($object->id_status == $wo->STATUS) $row[] = $object->nama_status; 
+                    if($object->id_status == $wo->ESKALASI_KENDALA) $row[] = $object->nama_status; 
                 }
             }
             else{
@@ -100,7 +100,8 @@ class HDM extends CI_Controller {
                 <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeFase" onclick="ChangeFase('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Rubah Fase</a>
                   <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeKendala" onclick="ChangeKendala('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Tambah Kendala</a>
                   <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="AddKeterangan" onclick="add_keterangan('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah Keterangan</a>
-                  <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Detail" onclick="detail('."'".$wo->ND."'".')"><i class="glyphicon glyphicon-ok"></i> Detail Pelanggan</a>';
+                  <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Detail" onclick="detail('."'".$wo->ND."'".')"><i class="glyphicon glyphicon-ok"></i> Detail Pelanggan</a>
+                  <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Delete" onclick="cancel_order('."'".$wo->ND."'".')"><i class="glyphicon glyphicon-remove-sign"></i> Cancel Order </a>';
             }
             else
             {
@@ -109,7 +110,8 @@ class HDM extends CI_Controller {
                   <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeFase" onclick="ChangeFase('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Rubah Fase</a>
                   <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="ChangeKendala" onclick="ChangeKendala('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-question-sign"></i> Tambah Kendala</a>
                   <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="AddKeterangan" onclick="add_keterangan('."'".$wo->ID_TRANSAKSI."'".')"><i class="glyphicon glyphicon-pencil"></i> Tambah Keterangan</a>
-                  <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Detail" onclick="detail('."'".$wo->ND."'".')"><i class="glyphicon glyphicon-ok"></i> Detail Pelanggan</a>';
+                  <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Detail" onclick="detail('."'".$wo->ND."'".')"><i class="glyphicon glyphicon-ok"></i> Detail Pelanggan</a>
+                  <a class="btn btn-sm btn-danger" href="javascript:void(0)" title="Delete" onclick="cancel_order('."'".$wo->ND."'".')"><i class="glyphicon glyphicon-remove-sign"></i> Cancel Order </a>';
             }
             
          
@@ -254,7 +256,7 @@ class HDM extends CI_Controller {
     {
         $nd = $this->input->post('ND');
         $data = array(
-                'ESKALASI_KENDALA' => $this->input->post('Status'),
+                'ESKALASI_KENDALA' => $this->input->post('Kendala'),
                 'KETERANGAN_TAMBAHAN' => $this->input->post('Keterangan')
             );
         $status = $this->m_log->getstatus();
@@ -313,6 +315,31 @@ class HDM extends CI_Controller {
         $this->m_hdm->update(array('ND'=> $this->input->post('ND')), $data);
         $this->m_log->insertlog($log);
         echo json_encode(array("status" => TRUE));	
+    }
+
+    public function ajax_cancel_order($nd)
+    {
+        $status = $this->m_log->getstatus();
+        foreach($status as $object_status) {
+            if($nd == $object_status->ND) $id_status = $object_status->STATUS;
+        }
+        $fase = $this->m_log->getfase();
+        foreach($fase as $object_fase) {
+            if($nd == $object_fase->ND) $id_fase = $object_fase->FASE_TRANSAKSI;
+        }
+        $log = array(
+                'id_log' => NULL,
+                'tanggal_log' => date('Y-m-d'),
+                'ND_log' => $nd,
+                'id_fase_log' => $id_fase,
+                'id_status_log' => $id_status,
+                'keterangan_log' => 'cancel order by mitra',
+                'action_log' => 'CANCEL ORDER',
+                'updated_by_log'=> $this->session->userdata('user')
+            );
+        $this->m_hdm->delete_by_nd($nd);
+        $this->m_log->insertlog($log);  
+        echo json_encode(array("status" => TRUE));
     }
 
     public function trackwo()
@@ -397,8 +424,14 @@ class HDM extends CI_Controller {
 
     public function manageteknisi()
     {
+        $mitra = $this->session->userdata('mitra');
+        $query_mitra = $this->m_user->get_all_mitra();
+        foreach($query_mitra as $object) {
+            if($object->id_mitra == $mitra) $namamitra = $object->nama_mitra; 
+        }
+        $data['nama_mitra'] = $namamitra;
         $this->load->view('layout/header');
-        $this->load->view('HDM/manageteknisi');
+        $this->load->view('HDM/manageteknisi', $data);
         $this->load->view('layout/footer');
     }
 
@@ -416,9 +449,6 @@ class HDM extends CI_Controller {
             $row[] = $user->id_user;
             foreach($query_mitra as $object) {
                 if($object->id_mitra == $user->id_mitra) $row[] = $object->nama_mitra; 
-            }
-            foreach($query_role as $object) {
-                if($object->id_role_user == $user->id_role_user) $row[] = $object->nama_role_user; 
             }
             $row[] = $user->username_user;
             $row[] = $user->nama_user;
@@ -450,11 +480,11 @@ class HDM extends CI_Controller {
  
     public function ajax_add_teknisi2()
     {
-        $this->_validate();
+        $this->_validate_teknisi();
         $data = array(
                 'id_user' => $this->input->post('id_user'),
-                'id_mitra' => $this->input->post('id_mitra'),
-                'id_role_user' => $this->input->post('id_role_user'),
+                'id_mitra' => $this->session->userdata('mitra'),
+                'id_role_user' => 'RO8',
                 'username_user' => $this->input->post('username_user'),
                 'password_user' => md5($this->input->post('password_user')),
                 'nama_user' => $this->input->post('nama_user'),
@@ -469,8 +499,8 @@ class HDM extends CI_Controller {
         $this->_validate_teknisi();
         $data = array(
                 'id_user' => $this->input->post('id_user'),
-                'id_mitra' => $this->input->post('id_mitra'),
-                'id_role_user' => $this->input->post('id_role_user'),
+                'id_mitra' => $this->session->userdata('mitra'),
+                'id_role_user' => 'RO8',
                 'username_user' => $this->input->post('username_user'),
                 'password_user' => md5($this->input->post('password_user')),
                 'nama_user' => $this->input->post('nama_user'),
@@ -497,21 +527,7 @@ class HDM extends CI_Controller {
         if($this->input->post('id_user') == '')
         {
             $data['inputerror'][] = 'id_user';
-            $data['error_string'][] = 'Id User is required';
-            $data['status'] = FALSE;
-        }
- 
-        if($this->input->post('id_mitra') == '')
-        {
-            $data['inputerror'][] = 'id_mitra';
-            $data['error_string'][] = 'Id Mitra is required';
-            $data['status'] = FALSE;
-        }
- 
-        if($this->input->post('id_role_user') == '')
-        {
-            $data['inputerror'][] = 'id_role_user';
-            $data['error_string'][] = 'Role is required';
+            $data['error_string'][] = 'Id Teknisi is required';
             $data['status'] = FALSE;
         }
  
@@ -539,7 +555,7 @@ class HDM extends CI_Controller {
         if($this->input->post('no_telepon_user') == '')
         {
             $data['inputerror'][] = 'no_telepon_user';
-            $data['error_string'][] = 'No telepeon is required';
+            $data['error_string'][] = 'No telepon is required';
             $data['status'] = FALSE;
         }
 
