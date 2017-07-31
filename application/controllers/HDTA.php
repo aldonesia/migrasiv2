@@ -85,7 +85,7 @@ class HDTA extends CI_Controller {
         }
     }
 
-    public function addWORK_js(){
+    public function addWODP_js(){
         if($this->input->post('dp')) $query_ND = $this->m_wo->get_info_nd_by_dp($this->input->post('dp'));
         else $query_ND = $this->m_wo->get_info_nd_by_rk($this->input->post('rk'));
         $result = $this->m_wo->addWO_js($query_ND);

@@ -78,7 +78,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <script type="text/javascript">
         $('#btnAdd').click(function(){
             $('#confirmation').modal('show');
-            $('#AddForm').attr('action', '<?php echo base_url() ?>HDTA/addWO_js');
+            $('#AddForm').attr('action', '<?php echo base_url() ?>HDTA/addWODP_js');
         });
         $('#btnSave').click(function(){
             var url = $('#AddForm').attr('action');

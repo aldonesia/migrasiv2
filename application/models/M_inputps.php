@@ -1,10 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
  
-class M_hdm extends CI_Model {
+class M_inputps extends CI_Model {
  
     var $table = 'transaksi';
-    var $column_order = array('TGL_DATA_MASUK','FASE_TRANSAKSI','KETERANGAN_TAMBAHAN','TGL_INPUT_TEKNISI','ID_TEKNISI','ND','NAMA_PELANGGAN','STATUS','ODP','SN','TGL_LAYANAN_UP','UPDATE_LAYANAN','ESKALASI_KENDALA','STATUS_DP','TGL_input','TGL_PS','STATUS_PS',null); //set column field database for datatable orderable
+    var $column_order = array('TGL_DATA_MASUK','ND','PASSWORD_VOICE','ESKALASI_KENDALA','KETERANGAN_TAMBAHAN',null); //set column field database for datatable orderable
     var $column_search = array('ND'); //set column field database for datatable searchable just firstname , lastname , address are searchable
     var $order = array('ID_TRANSAKSI' => 'asc'); // default order 
  
@@ -14,10 +14,8 @@ class M_hdm extends CI_Model {
         $this->load->database();
     }
  
-    private function _get_datatables_query($id_mitra)
+    private function _get_datatables_query()
     {
-        $this->db->where('MITRA', $id_mitra);
-        $this->db->where_in('FASE_TRANSAKSI', array('FA01','FA02','FA03','FA04','FA05','FA06'));
         $this->db->from($this->table);
  
         $i = 0;
@@ -54,18 +52,18 @@ class M_hdm extends CI_Model {
         }
     }
  
-    function get_datatables($mitra)
+    function get_datatables()
     {
-        $this->_get_datatables_query($mitra);
+        $this->_get_datatables_query();
         if($_POST['length'] != -1)
         $this->db->limit($_POST['length'], $_POST['start']);
         $query = $this->db->get();
         return $query->result();
     }
  
-    function count_filtered($mitra)
+    function count_filtered()
     {
-        $this->_get_datatables_query($mitra);
+        $this->_get_datatables_query();
         $query = $this->db->get();
         return $query->num_rows();
     }
@@ -75,16 +73,10 @@ class M_hdm extends CI_Model {
         $this->db->from($this->table);
         return $this->db->count_all_results();
     }
-
-    public function delete_by_nd($nd)
-    {
-        $this->db->where('ND', $nd);
-        $this->db->delete($this->table);
-    }
  
     public function get_by_id_transaksi($id_transaksi)
     {
-        $this->db->select('ND');
+        $this->db->select(array('ND','SC','STATUS_PS','ESKALASI_KENDALA','KETERANGAN_TAMBAHAN'));
         $this->db->from($this->table);
         $this->db->where('ID_TRANSAKSI',$id_transaksi);
         $query = $this->db->get();
@@ -95,7 +87,7 @@ class M_hdm extends CI_Model {
     public function get_by_ND($ND)
     {
         $this->db->select(array('ND','NAMA','CAREA','RK','DP'));
-        $this->db->from('temporary');
+        $this->db->from('master');
         $this->db->where('ND',$ND);
         $query = $this->db->get();
  
@@ -139,22 +131,21 @@ class M_hdm extends CI_Model {
         return $sql->result();
     }
 
-    public function get_nama_mitra() {
-        $sql = $this->db->get('mitra');
-        return $sql->result();
-    }
-
     public function get_all_status() {
         $sql = $this->db->get('status');
         return $sql->result();
     }
 
-    public function get_all_status_hdm() {
-        $this->db->select(array('id_status','nama_status'));
-        $this->db->from('status');
-        $this->db->where_in('id_status', array('ST06','ST08','ST09','ST10','ST13','ST02'));
-        $sql = $this->db->get();
+    public function get_status_kendala() {
+        $this->db->where_in('id_status', array('ST06','ST09','ST10','ST02','ST13','ST08'));
+        $sql = $this->db->get('status');
         return $sql->result();
+    }
+
+    public function get_status_ps() {
+        $this->db->where_in('id_status', array('ST01','ST12'));
+        $sql = $this->db->get('status');
+        return $sql->result();   
     }
 
     public function get_all_teknisi($mitra) {
@@ -170,7 +161,7 @@ class M_hdm extends CI_Model {
     private function _get_datatables_query_tw($id_mitra)
     {
         $this->db->where('MITRA', $id_mitra);
-        $this->db->where_in('FASE_TRANSAKSI', array('FA06','FA07','FA08'));
+        $this->db->where_in('FASE_TRANSAKSI', array('FA07','FA08'));
         $this->db->from($this->table);
  
         $i = 0;
