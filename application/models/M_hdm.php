@@ -133,6 +133,16 @@ class M_hdm extends CI_Model {
         return $sql->result();
     }
 
+    public function get_nama_mitra($id_mitra) {
+        echo $id_mitra;
+        $this->db->select('nama_mitra');
+        //$this->db->from('mitra');
+        $this->db->where('id_mitra', $id_mitra);
+        $sql = $this->db->get('mitra');
+        echo $sql;
+        return $sql->result();
+    }
+
     public function get_all_status() {
         $sql = $this->db->get('status');
         return $sql->result();

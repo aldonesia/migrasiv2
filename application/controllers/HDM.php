@@ -397,8 +397,14 @@ class HDM extends CI_Controller {
 
     public function manageteknisi()
     {
+        $mitra = $this->session->userdata('mitra');
+        $query_mitra = $this->m_user->get_all_mitra();
+        foreach($query_mitra as $object) {
+            if($object->id_mitra == $mitra) $namamitra = $object->nama_mitra; 
+        }
+        $data['nama_mitra'] = $namamitra;
         $this->load->view('layout/header');
-        $this->load->view('HDM/manageteknisi');
+        $this->load->view('HDM/manageteknisi', $data);
         $this->load->view('layout/footer');
     }
 
@@ -416,9 +422,6 @@ class HDM extends CI_Controller {
             $row[] = $user->id_user;
             foreach($query_mitra as $object) {
                 if($object->id_mitra == $user->id_mitra) $row[] = $object->nama_mitra; 
-            }
-            foreach($query_role as $object) {
-                if($object->id_role_user == $user->id_role_user) $row[] = $object->nama_role_user; 
             }
             $row[] = $user->username_user;
             $row[] = $user->nama_user;
@@ -450,11 +453,11 @@ class HDM extends CI_Controller {
  
     public function ajax_add_teknisi2()
     {
-        $this->_validate();
+        $this->_validate_teknisi();
         $data = array(
                 'id_user' => $this->input->post('id_user'),
-                'id_mitra' => $this->input->post('id_mitra'),
-                'id_role_user' => $this->input->post('id_role_user'),
+                'id_mitra' => $this->session->userdata('mitra'),
+                'id_role_user' => 'RO8',
                 'username_user' => $this->input->post('username_user'),
                 'password_user' => md5($this->input->post('password_user')),
                 'nama_user' => $this->input->post('nama_user'),
@@ -469,8 +472,8 @@ class HDM extends CI_Controller {
         $this->_validate_teknisi();
         $data = array(
                 'id_user' => $this->input->post('id_user'),
-                'id_mitra' => $this->input->post('id_mitra'),
-                'id_role_user' => $this->input->post('id_role_user'),
+                'id_mitra' => $this->session->userdata('mitra'),
+                'id_role_user' => 'RO8',
                 'username_user' => $this->input->post('username_user'),
                 'password_user' => md5($this->input->post('password_user')),
                 'nama_user' => $this->input->post('nama_user'),
@@ -497,21 +500,7 @@ class HDM extends CI_Controller {
         if($this->input->post('id_user') == '')
         {
             $data['inputerror'][] = 'id_user';
-            $data['error_string'][] = 'Id User is required';
-            $data['status'] = FALSE;
-        }
- 
-        if($this->input->post('id_mitra') == '')
-        {
-            $data['inputerror'][] = 'id_mitra';
-            $data['error_string'][] = 'Id Mitra is required';
-            $data['status'] = FALSE;
-        }
- 
-        if($this->input->post('id_role_user') == '')
-        {
-            $data['inputerror'][] = 'id_role_user';
-            $data['error_string'][] = 'Role is required';
+            $data['error_string'][] = 'Id Teknisi is required';
             $data['status'] = FALSE;
         }
  
@@ -539,7 +528,7 @@ class HDM extends CI_Controller {
         if($this->input->post('no_telepon_user') == '')
         {
             $data['inputerror'][] = 'no_telepon_user';
-            $data['error_string'][] = 'No telepeon is required';
+            $data['error_string'][] = 'No telepon is required';
             $data['status'] = FALSE;
         }
 
