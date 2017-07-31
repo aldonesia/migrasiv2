@@ -18,7 +18,19 @@ class Dashboard extends CI_Controller {
 			{
 				$this->WelcomePageAdmin();
 			}
-			else 
+			else if ($data['role'] == 'RO4')
+			{
+				$this->WelcomePageCentral();
+			}
+			else if ($data['role'] == 'RO5')
+			{
+				$this->WelcomePageLogic();
+			}
+			else if ($data['role'] == 'RO6')
+			{
+				$this->WelcomePageInputPS();
+			}
+			else if ($data['role'] == 'RO3')
 			{
 			 	$this->WelcomePageHDTA();
 			}
@@ -43,10 +55,32 @@ class Dashboard extends CI_Controller {
 		else redirect('Dashboard');
 	}
 
+	public function WelcomePageInputPS() {
+		if($this->session->userdata('role') == 'RO6') {
+			redirect('InputPS');
+		}
+		else redirect('Dashboard');
+	}
 	public function WelcomePageHDTA() {
-		if($this->session->userdata('role') == 'RO3' || $this->session->userdata('role') == 'RO4' || $this->session->userdata('role') == 'RO5' || $this->session->userdata('role') == 'RO6'){
+		if($this->session->userdata('role') == 'RO3'){
 			redirect('HDTA');
 		}
 		else redirect('Dashboard');
 	}
+
+	public function WelcomePageCentral() {
+		if($this->session->userdata('role') == 'RO4'){
+			redirect('Central');
+		}
+		else redirect('Dashboard');
+	}
+
+	public function WelcomePageLogic() {
+		if($this->session->userdata('role') == 'RO5'){
+			redirect('Logic');
+		}
+		else redirect('Dashboard');
+	}
+
+	
 }
