@@ -83,7 +83,7 @@ class HDM extends CI_Controller {
             if ($wo->ESKALASI_KENDALA != NULL)
             {
                 foreach($status as $object) {
-                    if($object->id_status == $wo->STATUS) $row[] = $object->nama_status; 
+                    if($object->id_status == $wo->ESKALASI_KENDALA) $row[] = $object->nama_status; 
                 }
             }
             else{
@@ -256,7 +256,7 @@ class HDM extends CI_Controller {
     {
         $nd = $this->input->post('ND');
         $data = array(
-                'ESKALASI_KENDALA' => $this->input->post('Status'),
+                'ESKALASI_KENDALA' => $this->input->post('Kendala'),
                 'KETERANGAN_TAMBAHAN' => $this->input->post('Keterangan')
             );
         $status = $this->m_log->getstatus();

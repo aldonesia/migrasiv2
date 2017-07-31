@@ -69,6 +69,7 @@ class Admin extends CI_Controller
         $fase = $this->m_hdm->get_all_fase();
         $nama_teknisi = $this->m_hdm->get_nama_teknisi();
         $status = $this->m_hdm->get_all_status();
+        $mitra = $this->m_hdm->get_nama_mitra();
         $list = $this->m_admin->get_datatables_full();
         $data = array();
         $no = $_POST['start'];
@@ -76,15 +77,47 @@ class Admin extends CI_Controller
             $no++;
             $row = array();
             $row[] = $no;
-
             $row[] = $wo->TGL_DATA_MASUK;
-
-            $row[] = $wo->ND;
 
             foreach($fase as $object) {
                 if($object->id_fase == $wo->FASE_TRANSAKSI) $row[] = $object->nama_fase; 
             }
 
+            foreach($mitra as $object) {
+                if($object->id_mitra == $wo->MITRA) $row[] = $object->nama_mitra; 
+            }
+
+            if($wo->ID_TEKNISI != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->ID_TEKNISI) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $wo->ID_TEKNISI;
+            }
+
+            $row[] = $wo->TGL_INPUT_TEKNISI;
+            $row[] = $wo->NAMA_PELANGGAN;
+            $row[] = $wo->ND;
+            $row[] = $wo->USER_INTERNET;
+            $row[] = $wo->ODP;
+            $row[] = $wo->STO;
+            $row[] = $wo->PASSWORD_VOICE;
+            $row[] = $wo->SN;
+            if($wo->HD_GRUP != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->HD_GRUP) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $HD_GRUP;
+            }
+            $row[] = $wo->KEDETECT_LAPANGAN;
+            $row[] = $wo->MAINCORE;
             if ($wo->STATUS != NULL)
             {
                 foreach($status as $object) {
@@ -94,9 +127,7 @@ class Admin extends CI_Controller
             else{
                 $row[] = $wo->STATUS;
             }
-
-            $row[] = $wo->TGL_LAYANAN_UP;
-
+            $row[] = $wo->ONU_ID;
             if ($wo->UPDATE_LAYANAN != NULL)
             {
                 foreach($status as $object) {
@@ -106,7 +137,17 @@ class Admin extends CI_Controller
             else{
                 $row[] = $wo->UPDATE_LAYANAN;
             }
-
+            $row[] = $wo->TGL_LAYANAN_UP;
+            if($wo->HD_LOGIC != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->HD_LOGIC) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $wo->HD_LOGIC;
+            }
             if ($wo->ESKALASI_KENDALA != NULL)
             {
                 foreach($status as $object) {
@@ -118,11 +159,39 @@ class Admin extends CI_Controller
             }
             $row[] = $wo->STATUS_DP;
             $row[] = $wo->KETERANGAN_TAMBAHAN;
+            $row[] = $wo->LAYANAN;
+            $row[] = $wo->SC;
+            if($wo->HD_INPUTER != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->HD_INPUTER) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $wo->HD_INPUTER;
+            }
             $row[] = $wo->TGL_INPUT;
+            if($wo->HD_PS != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->HD_PS) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $wo->HD_PS;
+            }
+            if ($wo->STATUS_PS != NULL)
+            {
+                foreach($status as $object) {
+                    if($object->id_status == $wo->STATUS_PS) $row[] = $object->nama_status; 
+                }
+            }
+            else{
+                $row[] = $wo->STATUS_PS;
+            }
             $row[] = $wo->TGL_PS;
-            $row[] = $wo->STATUS_PS;
-     
-         
             $data[] = $row;
         }
  
@@ -141,6 +210,7 @@ class Admin extends CI_Controller
 		$fase = $this->m_hdm->get_all_fase();
         $nama_teknisi = $this->m_hdm->get_nama_teknisi();
         $status = $this->m_hdm->get_all_status();
+        $mitra = $this->m_hdm->get_nama_mitra();
         $list = $this->m_admin->get_datatables_trouble();
         $data = array();
         $no = $_POST['start'];
@@ -148,15 +218,47 @@ class Admin extends CI_Controller
             $no++;
             $row = array();
             $row[] = $no;
-
             $row[] = $wo->TGL_DATA_MASUK;
-
-            $row[] = $wo->ND;
 
             foreach($fase as $object) {
                 if($object->id_fase == $wo->FASE_TRANSAKSI) $row[] = $object->nama_fase; 
             }
 
+            foreach($mitra as $object) {
+                if($object->id_mitra == $wo->MITRA) $row[] = $object->nama_mitra; 
+            }
+
+            if($wo->ID_TEKNISI != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->ID_TEKNISI) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $wo->ID_TEKNISI;
+            }
+
+            $row[] = $wo->TGL_INPUT_TEKNISI;
+            $row[] = $wo->NAMA_PELANGGAN;
+            $row[] = $wo->ND;
+            $row[] = $wo->USER_INTERNET;
+            $row[] = $wo->ODP;
+            $row[] = $wo->STO;
+            $row[] = $wo->PASSWORD_VOICE;
+            $row[] = $wo->SN;
+            if($wo->HD_GRUP != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->HD_GRUP) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $HD_GRUP;
+            }
+            $row[] = $wo->KEDETECT_LAPANGAN;
+            $row[] = $wo->MAINCORE;
             if ($wo->STATUS != NULL)
             {
                 foreach($status as $object) {
@@ -166,9 +268,7 @@ class Admin extends CI_Controller
             else{
                 $row[] = $wo->STATUS;
             }
-
-            $row[] = $wo->TGL_LAYANAN_UP;
-
+            $row[] = $wo->ONU_ID;
             if ($wo->UPDATE_LAYANAN != NULL)
             {
                 foreach($status as $object) {
@@ -178,7 +278,17 @@ class Admin extends CI_Controller
             else{
                 $row[] = $wo->UPDATE_LAYANAN;
             }
-
+            $row[] = $wo->TGL_LAYANAN_UP;
+            if($wo->HD_LOGIC != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->HD_LOGIC) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $wo->HD_LOGIC;
+            }
             if ($wo->ESKALASI_KENDALA != NULL)
             {
                 foreach($status as $object) {
@@ -190,11 +300,39 @@ class Admin extends CI_Controller
             }
             $row[] = $wo->STATUS_DP;
             $row[] = $wo->KETERANGAN_TAMBAHAN;
+            $row[] = $wo->LAYANAN;
+            $row[] = $wo->SC;
+            if($wo->HD_INPUTER != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->HD_INPUTER) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $wo->HD_INPUTER;
+            }
             $row[] = $wo->TGL_INPUT;
+            if($wo->HD_PS != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->HD_PS) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $wo->HD_PS;
+            }
+            if ($wo->STATUS_PS != NULL)
+            {
+                foreach($status as $object) {
+                    if($object->id_status == $wo->STATUS_PS) $row[] = $object->nama_status; 
+                }
+            }
+            else{
+                $row[] = $wo->STATUS_PS;
+            }
             $row[] = $wo->TGL_PS;
-            $row[] = $wo->STATUS_PS;
-     
-         
             $data[] = $row;
         }
  
@@ -213,6 +351,7 @@ class Admin extends CI_Controller
 		$fase = $this->m_hdm->get_all_fase();
         $nama_teknisi = $this->m_hdm->get_nama_teknisi();
         $status = $this->m_hdm->get_all_status();
+        $mitra = $this->m_hdm->get_nama_mitra();
         $list = $this->m_admin->get_datatables_completed();
         $data = array();
         $no = $_POST['start'];
@@ -220,15 +359,47 @@ class Admin extends CI_Controller
             $no++;
             $row = array();
             $row[] = $no;
-
             $row[] = $wo->TGL_DATA_MASUK;
-
-            $row[] = $wo->ND;
 
             foreach($fase as $object) {
                 if($object->id_fase == $wo->FASE_TRANSAKSI) $row[] = $object->nama_fase; 
             }
 
+            foreach($mitra as $object) {
+                if($object->id_mitra == $wo->MITRA) $row[] = $object->nama_mitra; 
+            }
+
+            if($wo->ID_TEKNISI != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->ID_TEKNISI) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $wo->ID_TEKNISI;
+            }
+
+            $row[] = $wo->TGL_INPUT_TEKNISI;
+            $row[] = $wo->NAMA_PELANGGAN;
+            $row[] = $wo->ND;
+            $row[] = $wo->USER_INTERNET;
+            $row[] = $wo->ODP;
+            $row[] = $wo->STO;
+            $row[] = $wo->PASSWORD_VOICE;
+            $row[] = $wo->SN;
+            if($wo->HD_GRUP != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->HD_GRUP) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $HD_GRUP;
+            }
+            $row[] = $wo->KEDETECT_LAPANGAN;
+            $row[] = $wo->MAINCORE;
             if ($wo->STATUS != NULL)
             {
                 foreach($status as $object) {
@@ -238,9 +409,7 @@ class Admin extends CI_Controller
             else{
                 $row[] = $wo->STATUS;
             }
-
-            $row[] = $wo->TGL_LAYANAN_UP;
-
+            $row[] = $wo->ONU_ID;
             if ($wo->UPDATE_LAYANAN != NULL)
             {
                 foreach($status as $object) {
@@ -250,7 +419,17 @@ class Admin extends CI_Controller
             else{
                 $row[] = $wo->UPDATE_LAYANAN;
             }
-
+            $row[] = $wo->TGL_LAYANAN_UP;
+            if($wo->HD_LOGIC != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->HD_LOGIC) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $wo->HD_LOGIC;
+            }
             if ($wo->ESKALASI_KENDALA != NULL)
             {
                 foreach($status as $object) {
@@ -262,11 +441,39 @@ class Admin extends CI_Controller
             }
             $row[] = $wo->STATUS_DP;
             $row[] = $wo->KETERANGAN_TAMBAHAN;
+            $row[] = $wo->LAYANAN;
+            $row[] = $wo->SC;
+            if($wo->HD_INPUTER != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->HD_INPUTER) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $wo->HD_INPUTER;
+            }
             $row[] = $wo->TGL_INPUT;
+            if($wo->HD_PS != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->HD_PS) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $wo->HD_PS;
+            }
+            if ($wo->STATUS_PS != NULL)
+            {
+                foreach($status as $object) {
+                    if($object->id_status == $wo->STATUS_PS) $row[] = $object->nama_status; 
+                }
+            }
+            else{
+                $row[] = $wo->STATUS_PS;
+            }
             $row[] = $wo->TGL_PS;
-            $row[] = $wo->STATUS_PS;
-     
-         
             $data[] = $row;
         }
  
@@ -286,21 +493,54 @@ class Admin extends CI_Controller
         $nama_teknisi = $this->m_hdm->get_nama_teknisi();
         $status = $this->m_hdm->get_all_status();
         $list = $this->m_admin->get_datatables_processing();
+        $mitra = $this->m_hdm->get_nama_mitra();
         $data = array();
         $no = $_POST['start'];
         foreach ($list as $wo) {
             $no++;
             $row = array();
             $row[] = $no;
-
             $row[] = $wo->TGL_DATA_MASUK;
-
-            $row[] = $wo->ND;
 
             foreach($fase as $object) {
                 if($object->id_fase == $wo->FASE_TRANSAKSI) $row[] = $object->nama_fase; 
             }
 
+            foreach($mitra as $object) {
+                if($object->id_mitra == $wo->MITRA) $row[] = $object->nama_mitra; 
+            }
+
+            if($wo->ID_TEKNISI != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->ID_TEKNISI) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $wo->ID_TEKNISI;
+            }
+
+            $row[] = $wo->TGL_INPUT_TEKNISI;
+            $row[] = $wo->NAMA_PELANGGAN;
+            $row[] = $wo->ND;
+            $row[] = $wo->USER_INTERNET;
+            $row[] = $wo->ODP;
+            $row[] = $wo->STO;
+            $row[] = $wo->PASSWORD_VOICE;
+            $row[] = $wo->SN;
+            if($wo->HD_GRUP != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->HD_GRUP) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $HD_GRUP;
+            }
+            $row[] = $wo->KEDETECT_LAPANGAN;
+            $row[] = $wo->MAINCORE;
             if ($wo->STATUS != NULL)
             {
                 foreach($status as $object) {
@@ -310,9 +550,7 @@ class Admin extends CI_Controller
             else{
                 $row[] = $wo->STATUS;
             }
-
-            $row[] = $wo->TGL_LAYANAN_UP;
-
+            $row[] = $wo->ONU_ID;
             if ($wo->UPDATE_LAYANAN != NULL)
             {
                 foreach($status as $object) {
@@ -322,7 +560,17 @@ class Admin extends CI_Controller
             else{
                 $row[] = $wo->UPDATE_LAYANAN;
             }
-
+            $row[] = $wo->TGL_LAYANAN_UP;
+            if($wo->HD_LOGIC != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->HD_LOGIC) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $wo->HD_LOGIC;
+            }
             if ($wo->ESKALASI_KENDALA != NULL)
             {
                 foreach($status as $object) {
@@ -334,11 +582,39 @@ class Admin extends CI_Controller
             }
             $row[] = $wo->STATUS_DP;
             $row[] = $wo->KETERANGAN_TAMBAHAN;
+            $row[] = $wo->LAYANAN;
+            $row[] = $wo->SC;
+            if($wo->HD_INPUTER != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->HD_INPUTER) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $wo->HD_INPUTER;
+            }
             $row[] = $wo->TGL_INPUT;
+            if($wo->HD_PS != null)
+            {
+                foreach($nama_teknisi as $object) {
+                if($object->id_user == $wo->HD_PS) $row[] = $object->nama_user; 
+                }                
+            }
+            else
+            {
+                $row[] = $wo->HD_PS;
+            }
+            if ($wo->STATUS_PS != NULL)
+            {
+                foreach($status as $object) {
+                    if($object->id_status == $wo->STATUS_PS) $row[] = $object->nama_status; 
+                }
+            }
+            else{
+                $row[] = $wo->STATUS_PS;
+            }
             $row[] = $wo->TGL_PS;
-            $row[] = $wo->STATUS_PS;
-     
-         
             $data[] = $row;
         }
  
@@ -365,10 +641,14 @@ class Admin extends CI_Controller
             $row = array();
             $row[] = $no;
             $row[] = $wo->ND;
+            $row[] = $wo->ND_REFERENCE;
+            $row[] = $wo->IPTV;
+            $row[] = $wo->TIPE_SERVICES;
             $row[] = $wo->NAMA;
             $row[] = $wo->CAREA;
             $row[] = $wo->RK;
             $row[] = $wo->DP;
+            $row[] = $wo->ALPRO;
             $row[] = $wo->UIM_SERVICE_STATUS;  
             $data[] = $row;
         }

@@ -2,7 +2,7 @@
 class M_admin extends CI_Model 
 {
         var $table = 'transaksi';
-	    var $column_order = array('TGL_DATA_MASUK','FASE_TRANSAKSI','KETERANGAN_TAMBAHAN','TGL_INPUT_TEKNISI','ID_TEKNISI','ND','NAMA_PELANGGAN','STATUS','ODP','SN','TGL_LAYANAN_UP','UPDATE_LAYANAN','ESKALASI_KENDALA','STATUS_DP','TGL_input','TGL_PS','STATUS_PS',null); //set column field database for datatable orderable
+	    var $column_order = array('TGL_DATA_MASUK','FASE_TRANSAKSI','MITRA','ID_TEKNISI','TGL_INPUT_TEKNISI','NAMA_PELANGGAN','ND','USER_INTERNET','ODP','STO','PASSWORD_VOICE','SN','HD_GRUP','KEDETECT_LAPANGAN','MAINCORE','STATUS','ONU_ID','UPDATE_LAYANAN','TGL_LAYANAN UP','HD_LOGIC','ESKALASI_KENDALA','STATUS_DP','KETERANGAN_TAMBAHAN','LAYANAN','SC','HD_INPUTER','TGL_INPUT','HD_PS','STATUS_PS','TGL_PS',null); //set column field database for datatable orderable
 	    var $column_search = array('ND'); //set column field database for datatable searchable just firstname , lastname , address are searchable
 	    var $order = array('ID_TRANSAKSI' => 'asc'); // default order 
 	 
@@ -244,13 +244,22 @@ class M_admin extends CI_Model
 	    //leftover
 	    //------------
 	    var $table2 = 'temporary';
-		var $column_order2 = array('ND','NAMA','CAREA','RK','DP','ND','UIM_SERVICE_STATUS',null); //set column field database for datatable orderable
+		var $column_order2 = array('ND','ND_REFERENCE','IPTV','TIPE_SERVICES','NAMA','CAREA','RK','DP','ALPRO','UIM_SERVICE_STATUS',null); //set column field database for datatable orderable
 		var $column_search2 = array('ND'); //set column field database for datatable searchable just firstname , lastname , address are searchable
 		var $order2 = array('ND' => 'asc'); // default order 
 	    //------------
 	    private function _get_datatables_query_leftover()
 	    {
-	    	
+	    	$query1 = $this->db->query("select ND from transaksi");
+	    	$query1_result = $query1->result();
+	    	$nd_transaksi= array();
+  			foreach($query1_result as $row)
+  			{
+     			$nd_transaksi[] = $row->ND;
+   			}
+
+
+	    	$this->db->where_not_in('ND', $nd_transaksi);
 	        $this->db->from($this->table2);
 	 
 	        $i = 0;
@@ -312,9 +321,19 @@ class M_admin extends CI_Model
 
 	    //-------------------------------------------------------//
         function get_wo_sisa($values) {
-                $query = $this->db->get('temporary');
-                if($values == 'count') return $query->num_rows();
-                else return $query->result();
+        	$query1 = $this->db->query("select ND from transaksi");
+	    	$query1_result = $query1->result();
+	    	$nd_transaksi= array();
+  			foreach($query1_result as $row)
+  			{
+     			$nd_transaksi[] = $row->ND;
+   			}
+
+	    	$this->db->where_not_in('ND', $nd_transaksi);
+	        $this->db->from('temporary');
+            $query = $this->db->get();
+            if($values == 'count') return $query->num_rows();
+            else return $query->result();
         }
 
         function get_wo_processing($values) {
