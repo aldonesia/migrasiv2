@@ -18,6 +18,10 @@ class Dashboard extends CI_Controller {
 			{
 				$this->WelcomePageAdmin();
 			}
+			else if ($data['role'] == 'RO2')
+			{
+				$this->WelcomePageSuperUser();
+			}
 			else if ($data['role'] == 'RO4')
 			{
 				$this->WelcomePageCentral();
@@ -51,6 +55,13 @@ class Dashboard extends CI_Controller {
 	public function WelcomePageAdmin() {
 		if($this->session->userdata('role') == 'RO1'){
 			redirect('Admin');
+		}
+		else redirect('Dashboard');
+	}
+
+	public function WelcomePageSuperUser() {
+		if($this->session->userdata('role') == 'RO2'){
+			redirect('Superuser');
 		}
 		else redirect('Dashboard');
 	}
