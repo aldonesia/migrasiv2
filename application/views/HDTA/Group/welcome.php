@@ -80,7 +80,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				echo anchor(site_url($url_add_wo_rk),'Add new WorkOrder by RK','rel="nofollow"') . '<br/>';
 				$url_add_wo_dp_sto = array('HDTA','AddWObyDP_js');
 				echo anchor(site_url($url_add_wo_dp_sto),'Add new WorkOrder by DP','rel="nofollow"') . '<br/>';
-				$url_track_wo = array('HDTA','TrackingWO');
+				$url_track_wo = array('Group');
 				echo anchor(site_url($url_track_wo), 'Track WO','rel=nofollow') . '<br/>';
 			?>
 		</code>
